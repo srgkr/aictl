@@ -9,18 +9,24 @@ import (
 
 func (s *ScanSettings) UpdateFromAIProj(aiproj *aiproj.AIProj) error {
 	if aiproj.ScanModules != nil {
+		s.WhiteBoxSettings.StaticCodeAnalysisEnabled = false
+		s.WhiteBoxSettings.PatternMatchingEnabled = false
+		s.WhiteBoxSettings.SearchForVulnerableComponentsEnabled = false
+		s.WhiteBoxSettings.SearchWithScaEnabled = false
+		s.WhiteBoxSettings.SearchForConfigurationFlawsEnabled = false
+
 		for _, module := range aiproj.ScanModules {
 			switch module {
-			case "Configuration":
-				s.WhiteBoxSettings.SearchForConfigurationFlawsEnabled = true
-			case "Components":
-				s.WhiteBoxSettings.SearchForVulnerableComponentsEnabled = true
-			case "PatternMatching":
-				s.WhiteBoxSettings.PatternMatchingEnabled = true
 			case "StaticCodeAnalysis":
 				s.WhiteBoxSettings.StaticCodeAnalysisEnabled = true
+			case "PatternMatching":
+				s.WhiteBoxSettings.PatternMatchingEnabled = true
+			case "Components":
+				s.WhiteBoxSettings.SearchForVulnerableComponentsEnabled = true
 			case "SoftwareCompositionAnalysis":
 				s.WhiteBoxSettings.SearchWithScaEnabled = true
+			case "Configuration":
+				s.WhiteBoxSettings.SearchForConfigurationFlawsEnabled = true
 			case "BlackBox":
 				// TODO: add black box settings
 				return fmt.Errorf("''blackBox' is unimplemented")
