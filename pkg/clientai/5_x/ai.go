@@ -78,7 +78,7 @@ func (a *ClientAI) Initialize(ctx context.Context, cfg *config.Config) error {
 func (a *ClientAI) AddJwtRetry() {
 	a.HttpClient.Transport = clientai.NewRetryRoundTripper(a.HttpClient.Transport, http.StatusUnauthorized, a.refreshJWT)
 
-	a.BaseClient.WithRetry = true
+	a.WithRetry = true
 }
 
 func (a *ClientAI) getJWT(ctx context.Context, cfg *config.Config) error {

@@ -112,3 +112,7 @@ doc:
 check-doc:
 	@go run ./cmd/doc/generate_doc.go
 	@git diff --exit-code -- ./doc/ || (echo "❌ Docs outdated. Run 'make doc' and commit."; exit 1)
+
+.PHONY: check
+check: | check-doc test lint
+	@go-arch-lint check
