@@ -69,9 +69,19 @@ install:
 	@sudo cp bin/aictl /usr/bin/aictl
 	@echo "✅"
 
-bash:
+install-mac:
+	@echo -n "⇒ Copy aictl to /usr/bin/aictl..."
+	@sudo cp bin/aictl /usr/local/bin/aictl
+	@echo "✅"
+
+completion-bash:
 	@echo -n "⇒ Add bash completion..."
 	@bin/aictl completion bash | sudo tee /etc/bash_completion.d/aictl >/dev/null
+	@echo "✅"
+
+completion-zsh:
+	@echo -n "⇒ Add zsh completion..."
+	@"autoload -U compinit; compinit\neval \"$(aictl completion zsh)\"" >> .zprofile
 	@echo "✅"
 
 docker:
