@@ -39,6 +39,7 @@ func NewSetProjectSettingsCmd(uc UseCaseSetProjectSettings) CmdSetProjectSetting
 				}
 
 				aiprojString = args[0]
+
 			} else {
 				if !fshelper.PathExists(filePath) {
 					return fmt.Errorf("file %s does not exist", filePath)
