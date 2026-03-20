@@ -20,14 +20,10 @@ type UseCaseCreateBranch interface {
 }
 
 func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBranch {
-
 	var (
 		projectIdFlag string
-	)
-
-	var (
-		branchName string
-		scanTarget string
+		branchName    string
+		scanTarget    string
 	)
 
 	cmd := &cobra.Command{
@@ -35,7 +31,6 @@ func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBra
 		Short: "Create branch",
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-
 			if err := cfg.UpdateProjectId(projectIdFlag); err != nil {
 				return err
 			}
