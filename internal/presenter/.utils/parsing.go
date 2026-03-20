@@ -3,6 +3,7 @@ package _utils
 import (
 	"bufio"
 	"os"
+	"strings"
 
 	"github.com/POSIdev-community/aictl/pkg/errs"
 	"github.com/google/uuid"
@@ -34,5 +35,5 @@ func ReadArgsFromStdin(args []string) []string {
 		inputLines = append(inputLines, scanner.Text())
 	}
 
-	return inputLines
+	return []string{strings.Join(inputLines, "\n")}
 }
