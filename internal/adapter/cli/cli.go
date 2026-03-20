@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/POSIdev-community/aictl/internal/core/domain/statistic"
 	"github.com/POSIdev-community/aictl/pkg/logger"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/project"
@@ -91,9 +92,19 @@ func (cli *Adapter) ShowScans(ctx context.Context, scans []scan.Scan) {
 
 	const format = "%-36s\t%-36s\n"
 
-	log.StdErrf(format, "ID", "SETTINGS ID")
+	log.StdOutf(format, "ID", "SETTINGS ID")
 
 	for _, p := range scans {
-		log.StdErrf(format, p.Id, p.SettingsId)
+		log.StdOutf(format, p.Id, p.SettingsId)
 	}
+}
+
+func (cli *Adapter) ShowScanStatistic(ctx context.Context, statistic *statistic.Statistic) {
+	log := logger.FromContext(ctx)
+
+	log.StdOutf("Total: %d", statistic.Total)
+	log.StdOutf("High: %d", statistic.High)
+	log.StdOutf("Medium: %d", statistic.Medium)
+	log.StdOutf("Low: %d", statistic.Low)
+	log.StdOutf("Potential: %d", statistic.Potential)
 }

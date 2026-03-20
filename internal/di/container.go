@@ -20,6 +20,7 @@ import (
 	defaultreport "github.com/POSIdev-community/aictl/internal/core/application/usecase/get/scan/report/defaultreport"
 	"github.com/POSIdev-community/aictl/internal/core/application/usecase/get/scan/sbom"
 	"github.com/POSIdev-community/aictl/internal/core/application/usecase/get/scan/state"
+	"github.com/POSIdev-community/aictl/internal/core/application/usecase/get/scan/statistic"
 	getVersion "github.com/POSIdev-community/aictl/internal/core/application/usecase/get/version"
 	"github.com/POSIdev-community/aictl/internal/core/application/usecase/scan/await"
 	startBranch "github.com/POSIdev-community/aictl/internal/core/application/usecase/scan/start/branch"
@@ -225,7 +226,13 @@ func buildGetCmd(aiAdapter *ai.Adapter, cliAdapter *cli.Adapter, cfg *config.Con
 	}
 	cmdState := get.NewGetScanStateCmd(stateUC)
 
-	cmdScan := get.NewGetScanCmd(persistentPreRunEGetScanCmd, scanUC, cmdAiproj, cmdLogs, cmdReport, cmdSbom, cmdState)
+	statisticUC, err := statistic.NewUseCase(aiAdapter, cliAdapter, cfg)
+	if err != nil {
+		return nil, err
+	}
+	cmdStatistic := get.NewGetScanStatisticCmd(statisticUC)
+
+	cmdScan := get.NewGetScanCmd(persistentPreRunEGetScanCmd, scanUC, cmdAiproj, cmdLogs, cmdReport, cmdSbom, cmdState, cmdStatistic)
 
 	versionUC, err := getVersion.NewUseCase(aiAdapter, cliAdapter, cfg)
 	if err != nil {
@@ -275,10 +282,14 @@ func buildSetCmd(aiAdapter *ai.Adapter, cliAdapter *cli.Adapter, cfg *config.Con
 	if err != nil {
 		return nil, err
 	}
-	cmdSettings := setPresenter.NewSetProjectSettingsCmd(settingsUC)
-	cmdProject := setPresenter.NewSetProjectCmd(cfg, cmdSettings)
 
-	return setPresenter.NewSetCmd(cfg, cmdProject), nil
+	persistentPreRunESetCmd := setPresenter.NewPersistentPreRunESetCmd(cfg)
+	persistentPreRunESetProjectCmd := setPresenter.NewPersistentPreRunESetProjectCmd(cfg, persistentPreRunESetCmd)
+
+	cmdSettings := setPresenter.NewSetProjectSettingsCmd(settingsUC)
+	cmdProject := setPresenter.NewSetProjectCmd(persistentPreRunESetProjectCmd, cmdSettings)
+
+	return setPresenter.NewSetCmd(persistentPreRunESetCmd, cmdProject), nil
 }
 
 func buildUpdateCmd(aiAdapter *ai.Adapter, cliAdapter *cli.Adapter, cfg *config.Config) (*update.CmdUpdate, error) {

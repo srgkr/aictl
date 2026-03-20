@@ -31,4 +31,5 @@ aictl get scan <scan-id> [flags]
 * [aictl get scan report](aictl_get_scan_report.md)	 - Get scan report
 * [aictl get scan sbom](aictl_get_scan_sbom.md)	 - Get scan sbom
 * [aictl get scan stage](aictl_get_scan_stage.md)	 - Get scan stage
+* [aictl get scan statistic](aictl_get_scan_statistic.md)	 - Get scan statistic
 
