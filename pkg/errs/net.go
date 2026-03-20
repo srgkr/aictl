@@ -81,9 +81,8 @@ type UnknownResponseError struct {
 func (e *UnknownResponseError) Error() string {
 	if e.body == "" {
 		return fmt.Sprintf("Unknown response error. Status code: '%d'", e.statusCode)
-	} else {
-		return fmt.Sprintf("Unknown response error. Status code: '%d'\n%s", e.statusCode, e.body)
 	}
+	return fmt.Sprintf("Unknown response error. Status code: '%d'\n%s", e.statusCode, e.body)
 }
 
 func NewUnknownResponseError(statusCode int, body string) *UnknownResponseError {
@@ -101,9 +100,8 @@ type ServerResponseError struct {
 func (e *ServerResponseError) Error() string {
 	if e.body == "" {
 		return fmt.Sprintf("Server response error. Status code: '%d'", e.statusCode)
-	} else {
-		return fmt.Sprintf("Server response error. Status code: '%d'\n%s", e.statusCode, e.body)
 	}
+	return fmt.Sprintf("Server response error. Status code: '%d'\n%s", e.statusCode, e.body)
 }
 
 func NewServerError(statusCode int, body string) *ServerResponseError {

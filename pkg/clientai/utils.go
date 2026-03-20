@@ -1,4 +1,4 @@
-package ai
+package clientai
 
 import (
 	"archive/zip"
@@ -20,7 +20,7 @@ type MultipartField struct {
 	Value string
 }
 
-func prepareMultipartBody(
+func PrepareMultipartBody(
 	ctx context.Context,
 	archivePath string,
 	reportProgress bool,
@@ -50,7 +50,7 @@ func prepareMultipartBody(
 		go func() {
 			select {
 			case <-ctx.Done():
-				pw.CloseWithError(ctx.Err())
+				_ = pw.CloseWithError(ctx.Err())
 			case <-done:
 			}
 		}()
@@ -58,18 +58,18 @@ func prepareMultipartBody(
 		filename := filepath.Base(archivePath)
 		part, err := writer.CreateFormFile("file", filename)
 		if err != nil {
-			pw.CloseWithError(fmt.Errorf("create form file: %w", err))
+			_ = pw.CloseWithError(fmt.Errorf("create form file: %w", err))
 			return
 		}
 
 		fi, err := file.Stat()
 		if err != nil {
-			pw.CloseWithError(fmt.Errorf("stat file: %w", err))
+			_ = pw.CloseWithError(fmt.Errorf("stat file: %w", err))
 			return
 		}
 		totalSize := fi.Size()
 		if totalSize == 0 {
-			pw.CloseWithError(errors.New("archive is empty"))
+			_ = pw.CloseWithError(errors.New("archive is empty"))
 			return
 		}
 
@@ -87,7 +87,7 @@ func prepareMultipartBody(
 			if n > 0 {
 				// Пишем чанк в multipart
 				if _, writeErr := part.Write(buf[:n]); writeErr != nil {
-					pw.CloseWithError(fmt.Errorf("write to multipart part: %w", writeErr))
+					_ = pw.CloseWithError(fmt.Errorf("write to multipart part: %w", writeErr))
 					return
 				}
 				uploaded += int64(n)
@@ -104,7 +104,7 @@ func prepareMultipartBody(
 				break
 			}
 			if readErr != nil {
-				pw.CloseWithError(fmt.Errorf("read archive: %w", readErr))
+				_ = pw.CloseWithError(fmt.Errorf("read archive: %w", readErr))
 				return
 			}
 		}
@@ -116,7 +116,7 @@ func prepareMultipartBody(
 		// Поля (после файла — стандарт для multipart)
 		for _, field := range fields {
 			if err := writer.WriteField(field.Key, field.Value); err != nil {
-				pw.CloseWithError(fmt.Errorf("write field %q: %w", field.Key, err))
+				_ = pw.CloseWithError(fmt.Errorf("write field %q: %w", field.Key, err))
 				return
 			}
 		}
@@ -136,7 +136,7 @@ func (mrc *multipartReadCloser) Close() error {
 	return mrc.file.Close()
 }
 
-func prepareArchive(sourcePath string) (archivePath string, err error) {
+func PrepareArchive(sourcePath string) (archivePath string, err error) {
 	// Проверяем существование пути
 	info, err := os.Stat(sourcePath)
 	if err != nil {
@@ -300,7 +300,7 @@ func prepareArchive(sourcePath string) (archivePath string, err error) {
 	return archivePath, nil
 }
 
-func createStubScanTarget() (string, error) {
+func CreateStubScanTarget() (string, error) {
 	tempDir, err := os.MkdirTemp("", "source_*")
 	if err != nil {
 		return "", fmt.Errorf("failed to create temp dir: %w", err)
@@ -314,7 +314,7 @@ func createStubScanTarget() (string, error) {
 	return tempDir, nil
 }
 
-func getOrDefault[T any](value *T, defaultValue T) T {
+func GetOrDefault[T any](value *T, defaultValue T) T {
 	if value == nil {
 		return defaultValue
 	}
@@ -322,7 +322,7 @@ func getOrDefault[T any](value *T, defaultValue T) T {
 	return *value
 }
 
-func reference[T any](value T) *T {
+func Reference[T any](value T) *T {
 	return &value
 }
 
