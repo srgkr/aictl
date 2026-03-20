@@ -19,9 +19,8 @@ func (e *BadRequestApiErrorModelError) Error() string {
 
 	if len(result) == 0 {
 		return fmt.Sprintf("Bad request: '%s'", e.errorCode)
-	} else {
-		return fmt.Sprintf("Bad request: '%s'\n%s", e.errorCode, strings.Join(result, "\n"))
 	}
+	return fmt.Sprintf("Bad request: '%s'\n%s", e.errorCode, strings.Join(result, "\n"))
 }
 
 func NewBadRequestApiErrorModelError(errorCode string, details map[string]*string) *BadRequestApiErrorModelError {
@@ -43,9 +42,8 @@ func (e *UnknownApiErrorModelError) Error() string {
 
 	if len(result) == 0 {
 		return fmt.Sprintf("Unknown error. Status code: %d; %s", e.statusCode, e.errorCode)
-	} else {
-		return fmt.Sprintf("Unknown error. Status code: %d; %s\n%s", e.statusCode, e.errorCode, strings.Join(result, "\n"))
 	}
+	return fmt.Sprintf("Unknown error. Status code: %d; %s\n%s", e.statusCode, e.errorCode, strings.Join(result, "\n"))
 }
 
 func NewUnknownApiErrorModelError(statusCode int, errorCode string, details map[string]*string) *UnknownApiErrorModelError {

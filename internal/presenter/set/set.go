@@ -7,17 +7,23 @@ import (
 	"github.com/POSIdev-community/aictl/internal/presenter/.utils"
 )
 
+type PersistentPreRunESetCmd _utils.RunE
+
+func NewPersistentPreRunESetCmd(cfg *config.Config) PersistentPreRunESetCmd {
+	return _utils.ChainRunE(_utils.InitializeLogger, _utils.UpdateConfig(cfg))
+}
+
 type CmdSet struct {
 	*cobra.Command
 }
 
 func NewSetCmd(
-	cfg *config.Config,
+	persistentPreRunESetCmd PersistentPreRunESetCmd,
 	setProjectCmd CmdSetProject) *CmdSet {
 	cmd := &cobra.Command{
 		Use:               "set",
 		Short:             "Set",
-		PersistentPreRunE: _utils.ChainRunE(_utils.InitializeLogger, _utils.UpdateConfig(cfg)),
+		PersistentPreRunE: persistentPreRunESetCmd,
 	}
 
 	cmd.AddCommand(setProjectCmd.Command)

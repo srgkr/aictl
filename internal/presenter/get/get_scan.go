@@ -62,7 +62,7 @@ var (
 
 func NewGetScanCmd(persistentPreRunE PersistentPreRunEGetScanCmd, uc UseCaseGetScan, cmdGetScanAiproj CmdGetScanAiproj,
 	cmdGetScanLogs CmdGetScanLogs, cmdGetScanReport CmdGetScanReport, cmdGetScanSbom CmdGetScanSbom,
-	cmdGetScanState CmdGetScanState) CmdGetScan {
+	cmdGetScanState CmdGetScanState, cmdGetScanStatistic CmdGetScanStatistic) CmdGetScan {
 
 	cmd := &cobra.Command{
 		Use:               "scan <scan-id>",
@@ -87,6 +87,7 @@ func NewGetScanCmd(persistentPreRunE PersistentPreRunEGetScanCmd, uc UseCaseGetS
 	cmd.AddCommand(cmdGetScanReport.Command)
 	cmd.AddCommand(cmdGetScanSbom.Command)
 	cmd.AddCommand(cmdGetScanState.Command)
+	cmd.AddCommand(cmdGetScanStatistic.Command)
 
 	cmd.PersistentFlags().StringVarP(&projectIdFlag, "project-id", "p", "", "project id")
 

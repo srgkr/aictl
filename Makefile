@@ -69,9 +69,19 @@ install:
 	@sudo cp bin/aictl /usr/bin/aictl
 	@echo "✅"
 
-bash:
+install-mac:
+	@echo -n "⇒ Copy aictl to /usr/bin/aictl..."
+	@sudo cp bin/aictl /usr/local/bin/aictl
+	@echo "✅"
+
+completion-bash:
 	@echo -n "⇒ Add bash completion..."
 	@bin/aictl completion bash | sudo tee /etc/bash_completion.d/aictl >/dev/null
+	@echo "✅"
+
+completion-zsh:
+	@echo -n "⇒ Add zsh completion..."
+	@"autoload -U compinit; compinit\neval \"$(aictl completion zsh)\"" >> .zprofile
 	@echo "✅"
 
 docker:
@@ -102,3 +112,7 @@ doc:
 check-doc:
 	@go run ./cmd/doc/generate_doc.go
 	@git diff --exit-code -- ./doc/ || (echo "❌ Docs outdated. Run 'make doc' and commit."; exit 1)
+
+.PHONY: check
+check: | check-doc test lint
+	@go-arch-lint check

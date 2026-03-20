@@ -43,7 +43,7 @@ func (u *UseCase) Execute(ctx context.Context, scanLabel string) error {
 		return fmt.Errorf("initialize with retry: %w", err)
 	}
 
-	u.cliAdapter.ShowTextf(ctx, "starting scan, project-id '%v', branch-id '%v'", u.cfg.ProjectId())
+	u.cliAdapter.ShowTextf(ctx, "starting scan, project-id '%v', branch-id '%v'", u.cfg.ProjectId(), u.cfg.BranchId())
 
 	scanResultId, err := u.aiAdapter.StartScanProject(ctx, u.cfg.ProjectId(), scanLabel)
 	if err != nil {

@@ -71,7 +71,7 @@ func NewVersion(s string) (Version, error) {
 //
 // Unlike some implementations, we preserve explicit zeros to avoid ambiguity.
 // (If you prefer minimal form like "1", change logic accordingly.)
-func (v *Version) String() string {
+func (v Version) String() string {
 	switch v.components {
 	case 1:
 		return strconv.FormatUint(v.Major, 10)
@@ -84,7 +84,7 @@ func (v *Version) String() string {
 	}
 }
 
-func (v *Version) CompareVersion(other *Version) bool {
+func (v Version) CompareVersion(other Version) bool {
 	var components int
 	if v.components > other.components {
 		components = other.components
@@ -109,7 +109,7 @@ func (v *Version) CompareVersion(other *Version) bool {
 //	-1 if v < other
 //	 0 if v == other
 //	+1 if v > other
-func (v *Version) Compare(other *Version) int {
+func (v Version) Compare(other Version) int {
 	if diff := int64(v.Major) - int64(other.Major); diff != 0 {
 		return sign(diff)
 	}
@@ -135,7 +135,7 @@ func sign(x int64) int {
 }
 
 // Less reports whether v < other.
-func (v *Version) Less(other *Version) bool { return v.Compare(other) < 0 }
+func (v Version) Less(other Version) bool { return v.Compare(other) < 0 }
 
 // Greater reports whether v > other.
-func (v *Version) Greater(other *Version) bool { return v.Compare(other) > 0 }
+func (v Version) Greater(other Version) bool { return v.Compare(other) > 0 }
