@@ -1,6 +1,6 @@
-package aiproj1_8
+package aiproj1_9
 
-// Generated from https://www.schemastore.org/aiproj-1.8.json
+// Generated from https://www.schemastore.org/aiproj-1.9.json
 
 type AIProj struct {
 	Schema                 *string                 `json:"$schema,omitempty"`
@@ -99,6 +99,8 @@ type DotNetSettings struct {
 
 type GoSettings struct {
 	UsePublicAnalysisMethod *bool   `json:"UsePublicAnalysisMethod,omitempty"`
+	DownloadDependencies    *bool   `json:"DownloadDependencies,omitempty"`
+	DependenciesPath        *string `json:"DependenciesPath,omitempty"`
 	CustomParameters        *string `json:"CustomParameters,omitempty"`
 	DslRulesRelativePath    *string `json:"DslRulesRelativePath,omitempty"`
 }
@@ -120,6 +122,7 @@ type JavaScriptSettings struct {
 	UseTaintAnalysis        *bool   `json:"UseTaintAnalysis,omitempty"`
 	UseJsaAnalysis          *bool   `json:"UseJsaAnalysis,omitempty"`
 	DownloadDependencies    *bool   `json:"DownloadDependencies,omitempty"`
+	DependenciesPath        *string `json:"DependenciesPath,omitempty"`
 	CustomParameters        *string `json:"CustomParameters,omitempty"`
 	DslRulesRelativePath    *string `json:"DslRulesRelativePath,omitempty"`
 }
@@ -127,6 +130,7 @@ type JavaScriptSettings struct {
 type PhpSettings struct {
 	UsePublicAnalysisMethod *bool   `json:"UsePublicAnalysisMethod,omitempty"`
 	DownloadDependencies    *bool   `json:"DownloadDependencies,omitempty"`
+	DependenciesPath        *string `json:"DependenciesPath,omitempty"`
 	CustomParameters        *string `json:"CustomParameters,omitempty"`
 	DslRulesRelativePath    *string `json:"DslRulesRelativePath,omitempty"`
 }
