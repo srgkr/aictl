@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/POSIdev-community/aictl/internal/core/domain/aiproj/internal/1_8"
+	"github.com/POSIdev-community/aictl/internal/core/domain/aiproj/internal/1_9"
 )
 
-type AIProj = aiproj1_8.AIProj
+type AIProj = aiproj1_9.AIProj
 
 // FromString parses a JSON string into an AIProj structure and returns it, or an error if decoding fails.
 func FromString(s string) (AIProj, error) {

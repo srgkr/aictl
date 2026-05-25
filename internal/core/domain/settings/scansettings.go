@@ -80,8 +80,14 @@ func (s *ScanSettings) UpdateFromAIProj(aiproj *aiproj.AIProj) error {
 		if aiproj.GoSettings.CustomParameters != nil {
 			s.GoSettings.LaunchParameters = *aiproj.GoSettings.CustomParameters
 		}
+		if aiproj.GoSettings.DownloadDependencies != nil {
+			s.GoSettings.DownloadDependencies = *aiproj.GoSettings.DownloadDependencies
+		}
 		if aiproj.GoSettings.UsePublicAnalysisMethod != nil {
 			s.GoSettings.UseAvailablePublicAndProtectedMethods = *aiproj.GoSettings.UsePublicAnalysisMethod
+		}
+		if aiproj.GoSettings.DependenciesPath != nil {
+			s.GoSettings.DependenciesPath = *aiproj.GoSettings.DependenciesPath
 		}
 	}
 
@@ -101,6 +107,9 @@ func (s *ScanSettings) UpdateFromAIProj(aiproj *aiproj.AIProj) error {
 		}
 		if aiproj.JavaScriptSettings.UseJsaAnalysis != nil {
 			s.JavaScriptSettings.UseJsaAnalysis = *aiproj.JavaScriptSettings.UseJsaAnalysis
+		}
+		if aiproj.JavaScriptSettings.DependenciesPath != nil {
+			s.JavaScriptSettings.DependenciesPath = *aiproj.JavaScriptSettings.DependenciesPath
 		}
 	}
 
@@ -146,6 +155,9 @@ func (s *ScanSettings) UpdateFromAIProj(aiproj *aiproj.AIProj) error {
 		}
 		if aiproj.PhpSettings.DownloadDependencies != nil {
 			s.PhpSettings.DownloadDependencies = *aiproj.PhpSettings.DownloadDependencies
+		}
+		if aiproj.PhpSettings.DependenciesPath != nil {
+			s.PhpSettings.DependenciesPath = *aiproj.PhpSettings.DependenciesPath
 		}
 	}
 
@@ -262,12 +274,15 @@ type DotNetSettings struct {
 type GoSettings struct {
 	LaunchParameters                      string `json:"launchParameters"`
 	UseAvailablePublicAndProtectedMethods bool   `json:"useAvailablePublicAndProtectedMethods"`
+	DownloadDependencies                  bool   `json:"downloadDependencies"`
+	DependenciesPath                      string `json:"dependenciesPath"`
 }
 
 type JavaScriptSettings struct {
 	LaunchParameters                      string `json:"launchParameters"`
 	UseAvailablePublicAndProtectedMethods bool   `json:"useAvailablePublicAndProtectedMethods"`
 	DownloadDependencies                  bool   `json:"downloadDependencies"`
+	DependenciesPath                      string `json:"dependenciesPath"`
 	UseTaintAnalysis                      bool   `json:"useTaintAnalysis"`
 	UseJsaAnalysis                        bool   `json:"useJsaAnalysis"`
 }
@@ -287,6 +302,7 @@ type PhpSettings struct {
 	LaunchParameters                      string `json:"launchParameters"`
 	UseAvailablePublicAndProtectedMethods bool   `json:"useAvailablePublicAndProtectedMethods"`
 	DownloadDependencies                  bool   `json:"downloadDependencies"`
+	DependenciesPath                      string `json:"dependenciesPath"`
 }
 
 type PmTaintSettings struct {
