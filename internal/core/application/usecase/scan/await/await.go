@@ -55,7 +55,7 @@ func (u *UseCase) Execute(ctx context.Context, scanId uuid.UUID) error {
 		return fmt.Errorf("initialize with retry: %w", err)
 	}
 
-	u.cliAdapter.ShowTextf(ctx, "awating scan, id '%v'", scanId.String())
+	u.cliAdapter.ShowTextf(ctx, "awaiting scan, id '%v'", scanId.String())
 
 	failCount := 0
 	stage := scanstage.ScanStage{}
