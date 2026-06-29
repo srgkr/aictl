@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/internal/presenter/.utils"
-	"github.com/POSIdev-community/aictl/pkg/errs"
 )
 
 type PersistentPreRunEGetScanCmd _utils.RunE
@@ -27,23 +27,23 @@ func NewPersistentPreRunEGetScanCmd(cfg *config.Config, prev PersistentPreRunEGe
 
 		args = _utils.ReadArgsFromStdin(args)
 		if len(args) < 1 {
-			return errs.NewValidationError("missing scan id")
+			return validation.NewError("missing scan id")
 		}
 
 		if len(args) > 2 {
-			return errs.NewValidationError("too many arguments")
+			return validation.NewError("too many arguments")
 		}
 
 		scanIdFlag := args[len(args)-1]
 		customReportName = args[0]
 
 		if customReportName == "" {
-			return errs.NewValidationFieldError("custom-report-name", "cannot be empty")
+			return validation.NewFieldError("custom-report-name", "cannot be empty")
 		}
 
 		scanId, err = uuid.Parse(scanIdFlag)
 		if err != nil {
-			return errs.NewValidationFieldError(scanIdFlag, "invalid uuid")
+			return validation.NewFieldError(scanIdFlag, "invalid uuid")
 		}
 
 		return nil

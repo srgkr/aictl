@@ -13,7 +13,10 @@ func main() {
 	_, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer stop()
 
-	app := application.NewApplication()
+	app, err := application.NewApplication()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if err := app.GenerateDoc("./doc"); err != nil {
 		log.Fatal(err)

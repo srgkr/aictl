@@ -5,6 +5,7 @@ Start scan
 ### Options
 
 ```
+      --full-scan           run full scan instead of incremental
   -h, --help                help for start
       --scan-label string   scan label for scan
 ```

@@ -3,7 +3,7 @@ package context
 import (
 	"fmt"
 
-	"github.com/POSIdev-community/aictl/pkg/errs"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/pkg/logger"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ func NewConfigUnsetCommand(uc UseCaseConfigUnset) CmdConfigUnset {
 		Short: "Unset context params",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if !uriUnset && !tokenUnset && !tlsUnset && !projectIdUnset && !branchIdUnset {
-				return errs.NewValidationError("Any configs not provided")
+				return validation.NewError("Any configs not provided")
 			}
 
 			return nil

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/POSIdev-community/aictl/pkg/errs"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/pkg/fshelper"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
@@ -32,7 +32,7 @@ func NewGetScanStatisticCmd(uc UseCaseGetScanStatistic) CmdGetScanStatistic {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if outPath != "" {
 				if fshelper.PathExists(outPath) && !forceRewriteOutPath {
-					return errs.NewValidationError("'output' path exists")
+					return validation.NewError("'output' path exists")
 				}
 			}
 

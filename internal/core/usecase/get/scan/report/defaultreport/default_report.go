@@ -1,0 +1,86 @@
+package default_report
+
+import (
+	"context"
+	"fmt"
+	"io"
+
+	"github.com/POSIdev-community/aictl/internal/core/domain/report"
+	"github.com/google/uuid"
+
+	"github.com/POSIdev-community/aictl/internal/core/domain/config"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
+	"github.com/POSIdev-community/aictl/internal/core/usecase/.utils"
+)
+
+type AI interface {
+	InitializeWithRetry(ctx context.Context) error
+	GetDefaultTemplateId(ctx context.Context, reportType report.ReportType) (uuid.UUID, error)
+	GetReport(ctx context.Context, projectId, scanResultId, templateId uuid.UUID, includeComments, includeDFD, includeGlossary bool, l10n string) (io.ReadCloser, error)
+}
+
+type CLI interface {
+	ShowReader(r io.Reader) error
+	ShowTextf(ctx context.Context, format string, args ...any)
+}
+
+type UseCase struct {
+	aiAdapter  AI
+	cliAdapter CLI
+	cfg        *config.Config
+}
+
+func NewUseCase(aiAdapter AI, cliAdapter CLI, cfg *config.Config) (*UseCase, error) {
+	if aiAdapter == nil {
+		return nil, validation.NewRequiredError("aiAdapter")
+	}
+
+	if cliAdapter == nil {
+		return nil, validation.NewRequiredError("cliAdapter")
+	}
+
+	return &UseCase{
+		aiAdapter:  aiAdapter,
+		cliAdapter: cliAdapter,
+		cfg:        cfg,
+	}, nil
+}
+
+func (u *UseCase) Execute(ctx context.Context, scanId uuid.UUID, reportType report.ReportType, fullDestPath string, includeComments, includeDFD, includeGlossary bool, l10n string) error {
+	err := u.aiAdapter.InitializeWithRetry(ctx)
+	if err != nil {
+		return fmt.Errorf("initialize with retry: %w", err)
+	}
+
+	u.cliAdapter.ShowTextf(ctx, "getting '%s' scan report, scan-id '%v'", reportType.String(), scanId.String())
+
+	templateId, err := u.aiAdapter.GetDefaultTemplateId(ctx, reportType)
+	if err != nil {
+		return fmt.Errorf("get default template id: %w", err)
+	}
+
+	r, err := u.aiAdapter.GetReport(ctx, u.cfg.ProjectId(), scanId, templateId, includeComments, includeDFD, includeGlossary, l10n)
+	if err != nil {
+		return fmt.Errorf("get scan report: %w", err)
+	}
+
+	defer func() {
+		_ = r.Close()
+	}()
+
+	u.cliAdapter.ShowTextf(ctx, "'%s' scan report got", reportType.String())
+
+	if fullDestPath != "" {
+		if err := utils.CopyFileToPath(r, fullDestPath); err != nil {
+			return fmt.Errorf("copy report to path %s: %w", fullDestPath, err)
+		}
+
+		return nil
+	}
+
+	if err := u.cliAdapter.ShowReader(r); err != nil {
+		return fmt.Errorf("print report: %w", err)
+	}
+
+	return nil
+}

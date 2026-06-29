@@ -96,6 +96,19 @@ test:
 	@go test -race ./...
 	@echo "⇒ Tests ✅"
 
+.PHONY: build-e2e e2e-config test-e2e
+build-e2e:
+	@echo -n "⇒ Building aictl for e2e... "
+	@go build $(BUILD_OPTIONS) -o bin/aictl cmd/run/main.go
+	@echo "✅"
+
+e2e-config:
+	@test -f tests/e2e/stands.local.yaml || cp tests/e2e/stands.example.yaml tests/e2e/stands.local.yaml
+
+test-e2e: build-e2e
+	@chmod +x tests/e2e/run-pipeline.sh
+	go test -tags=e2e -v -timeout=45m -count=1 ./tests/e2e/...
+
 clean:
 	@echo -n "⇒ Cleaning... "
 	@rm -rf ./bin

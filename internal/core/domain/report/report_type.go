@@ -9,6 +9,7 @@ const (
 	Custom
 	Gitlab
 	Json
+	JsonV2
 	Markdown
 	Nist
 	Oud4

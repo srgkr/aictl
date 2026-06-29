@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/cobra/doc"
 
 	"github.com/POSIdev-community/aictl/internal/adapter/config"
-	"github.com/POSIdev-community/aictl/pkg/errs"
 	"github.com/POSIdev-community/aictl/pkg/logger"
 )
 
@@ -18,25 +17,28 @@ type Application struct {
 	cmd *presenter.CmdRoot
 }
 
-func NewApplication() *Application {
+func NewApplication() (*Application, error) {
 	cfgAdapter := config.NewContextAdapter()
 	cfg := cfgAdapter.GetContextFromAictlFolder()
 
-	cmd, _ := di.InitializeCmd(cfg)
+	cmd, err := di.InitializeCmd(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("initialize commands: %w", err)
+	}
 	cmd.DisableAutoGenTag = true
 
-	return &Application{cmd}
+	return &Application{cmd}, nil
 }
 
 func (app *Application) Run(ctx context.Context) {
 	err := app.cmd.ExecuteContext(ctx)
 	if err == nil {
-		os.Exit(0)
+		os.Exit(ExitCodeSuccess)
 	}
 	log := logger.FromContext(ctx)
 	log.StdErrf(err.Error())
 
-	exitCode, errorMessage := errs.MapExitCode(err)
+	exitCode, errorMessage := mapExitCode(err)
 
 	_, _ = fmt.Fprintln(os.Stderr, errorMessage)
 

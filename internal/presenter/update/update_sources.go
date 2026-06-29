@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
-	"github.com/POSIdev-community/aictl/pkg/errs"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/pkg/fshelper"
 	"github.com/spf13/cobra"
 )
@@ -43,11 +43,11 @@ func NewUpdateSourcesCmd(cfg *config.Config, uc UseCaseUpdateSources, cmdUpdateS
 
 			path = strings.TrimSpace(args[0])
 			if path == "" {
-				return errs.NewValidationError("empty sources path")
+				return validation.NewError("empty sources path")
 			}
 
 			if !fshelper.PathExists(path) {
-				return errs.NewValidationError("path does not exist")
+				return validation.NewError("path does not exist")
 			}
 
 			return nil

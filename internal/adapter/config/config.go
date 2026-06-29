@@ -13,7 +13,7 @@ import (
 
 const (
 	appDir     = "aictl"
-	configFile = "/context.yaml"
+	configFile = "context.yaml"
 )
 
 type Adapter struct {
@@ -77,7 +77,7 @@ func (a *Adapter) StoreContext(cfg *config.Config) error {
 		return err
 	}
 
-	configDir, err := os.UserConfigDir()
+	configDir, err := userConfigDir()
 	if err != nil {
 		return err
 	}
@@ -128,8 +128,16 @@ func (a *Adapter) StringYaml(cfg *config.Config) (string, error) {
 	return str, nil
 }
 
+func userConfigDir() (string, error) {
+	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
+		return dir, nil
+	}
+
+	return os.UserConfigDir()
+}
+
 func getConfigPath() (string, error) {
-	configDir, err := os.UserConfigDir()
+	configDir, err := userConfigDir()
 	if err != nil {
 		return "", err
 	}

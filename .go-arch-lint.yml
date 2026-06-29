@@ -1,18 +1,69 @@
 version: 3
-workdir: internal
+workdir: .
 allow:
   depOnAnyVendor: true
+  deepScan: false
 
 components:
-  adapter: { in: adapter/** }
-  application: { in: application/** }
-  di: { in: di/** }
-  core: { in: core/application/** }
-  domain: { in: core/domain/** }
-  presenter: { in: presenter/** }
-  pkg: { in: ../pkg/** }
+  pkg_clientai:
+    in: pkg/clientai/**
+  pkg_lib:
+    in:
+      - pkg/logger/**
+      - pkg/fshelper/**
+      - pkg/metric/**
+      - pkg/version/**
+  adapter:
+    in: internal/adapter/**
+  application:
+    in: internal/application/**
+  di:
+    in: internal/di/**
+  core:
+    in: internal/core/usecase/**
+  domain:
+    in: internal/core/domain/**
+  apperror:
+    in: internal/core/apperror/**
+  presenter:
+    in: internal/presenter/**
+  cmd:
+    in: cmd/**
+  tests:
+    in: tests/**
 
 deps:
+  pkg_clientai:
+    mayDependOn:
+      - pkg_clientai
+  pkg_lib:
+    mayDependOn:
+      - pkg_lib
+  adapter:
+    mayDependOn:
+      - adapter
+      - apperror
+      - domain
+      - pkg_clientai
+      - pkg_lib
+  core:
+    mayDependOn:
+      - apperror
+      - core
+      - domain
+      - pkg_lib
+  domain:
+    mayDependOn:
+      - domain
+  apperror:
+    mayDependOn:
+      - apperror
+  presenter:
+    mayDependOn:
+      - core
+      - presenter
+      - domain
+      - pkg_lib
   di:
     mayDependOn:
       - adapter
@@ -21,34 +72,22 @@ deps:
       - di
       - presenter
       - domain
-      - pkg
+      - pkg_clientai
+      - pkg_lib
   application:
     mayDependOn:
       - adapter
       - application
+      - apperror
       - core
       - di
       - presenter
       - domain
-      - pkg
-  presenter:
+      - pkg_lib
+  cmd:
     mayDependOn:
-      - core
-      - presenter
-      - domain
-      - pkg
-  core:
+      - application
+      - pkg_lib
+  tests:
     mayDependOn:
-      - adapter
-      - core
-      - domain
-      - pkg
-  adapter:
-    mayDependOn:
-      - domain
-      - pkg
-  domain:
-    mayDependOn:
-      - domain
-      # TODO: split errs to domain, networks
-      - pkg
+      - tests

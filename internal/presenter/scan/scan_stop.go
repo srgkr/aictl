@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/internal/presenter/.utils"
-	"github.com/POSIdev-community/aictl/pkg/errs"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 )
@@ -33,7 +33,7 @@ func NewScanStopCmd(uc UseCaseScanStop) CmdScanStop {
 			var err error
 			scanId, err = uuid.Parse(scanIdFlag)
 			if err != nil {
-				return errs.NewValidationFieldError(scanIdFlag, "invalid uuid")
+				return validation.NewFieldError(scanIdFlag, "invalid uuid")
 			}
 
 			return nil

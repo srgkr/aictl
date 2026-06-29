@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
+	"github.com/POSIdev-community/aictl/internal/core/domain/scantype"
 	"github.com/POSIdev-community/aictl/internal/presenter/.utils"
 	"github.com/spf13/cobra"
 )
@@ -14,15 +15,21 @@ type CmdScanStartBranch struct {
 }
 
 type UseCaseScanStartBranch interface {
-	Execute(ctx context.Context, scanLabel string) error
+	Execute(ctx context.Context, scanLabel string, scanType scantype.Type) error
 }
 
 func NewScanStartBranchCmd(cfg *config.Config, uc UseCaseScanStartBranch) CmdScanStartBranch {
+	var projectIdFlag string
+
 	cmd := &cobra.Command{
 		Use:   "branch <branch-id>",
 		Short: "Start branch scan",
 		Args:  cobra.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := cfg.UpdateProjectId(projectIdFlag); err != nil {
+				return err
+			}
+
 			args = _utils.ReadArgsFromStdin(args)
 
 			var branchIdFlag string
@@ -39,7 +46,7 @@ func NewScanStartBranchCmd(cfg *config.Config, uc UseCaseScanStartBranch) CmdSca
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
-			if err := uc.Execute(ctx, scanLabel); err != nil {
+			if err := uc.Execute(ctx, scanLabel, scanTypeFromFlags()); err != nil {
 				cmd.SilenceUsage = true
 
 				return fmt.Errorf("'scan start branch' usecase call: %w", err)
@@ -48,6 +55,8 @@ func NewScanStartBranchCmd(cfg *config.Config, uc UseCaseScanStartBranch) CmdSca
 			return nil
 		},
 	}
+
+	cmd.Flags().StringVarP(&projectIdFlag, "project-id", "p", "", "project id")
 
 	return CmdScanStartBranch{cmd}
 }

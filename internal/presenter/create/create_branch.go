@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	_utils "github.com/POSIdev-community/aictl/internal/presenter/.utils"
-	"github.com/POSIdev-community/aictl/pkg/errs"
 	"github.com/POSIdev-community/aictl/pkg/fshelper"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBra
 
 			if scanTarget != "" {
 				if !fshelper.PathExists(scanTarget) {
-					return errs.NewValidationError(fmt.Sprintf("scan-target path '%s' not exists", scanTarget))
+					return validation.NewError(fmt.Sprintf("scan-target path '%s' not exists", scanTarget))
 				}
 			}
 

@@ -36,6 +36,7 @@ aictl get scan report <report-name> <scan-id> [flags]
 * [aictl get scan report gitlab](aictl_get_scan_report_gitlab.md)	 - Get scan report gitlab
 * [aictl get scan report json](aictl_get_scan_report_json.md)	 - Get scan report json
 * [aictl get scan report json](aictl_get_scan_report_json.md)	 - Get scan report json
+* [aictl get scan report json-v2](aictl_get_scan_report_json-v2.md)	 - Get scan report json v2
 * [aictl get scan report markdown](aictl_get_scan_report_markdown.md)	 - Get scan report markdown
 * [aictl get scan report markdown](aictl_get_scan_report_markdown.md)	 - Get scan report markdown
 * [aictl get scan report owasp](aictl_get_scan_report_owasp.md)	 - Get scan report owasp

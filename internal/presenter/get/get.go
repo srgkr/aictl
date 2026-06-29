@@ -20,6 +20,8 @@ func NewGetCmd(
 	persistentPreRunE PersistentPreRunEGetCmd,
 	cmdGetHealthcheck CmdGetHealthcheck,
 	cmdGetProjects CmdGetProjects,
+	cmdGetBranches CmdGetBranches,
+	cmdGetScans CmdGetScans,
 	cmdGetScan CmdGetScan,
 	cmdGetVersion CmdGetVersion) *CmdGet {
 
@@ -31,6 +33,8 @@ func NewGetCmd(
 
 	cmd.AddCommand(cmdGetHealthcheck.Command)
 	cmd.AddCommand(cmdGetProjects.Command)
+	cmd.AddCommand(cmdGetBranches.Command)
+	cmd.AddCommand(cmdGetScans.Command)
 	cmd.AddCommand(cmdGetScan.Command)
 	cmd.AddCommand(cmdGetVersion.Command)
 

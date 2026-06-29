@@ -10,6 +10,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/statistic"
 	"github.com/POSIdev-community/aictl/pkg/logger"
 
+	"github.com/POSIdev-community/aictl/internal/core/domain/branch"
 	"github.com/POSIdev-community/aictl/internal/core/domain/project"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scan"
 )
@@ -54,6 +55,25 @@ func (cli *Adapter) ShowProjectsQuite(ctx context.Context, projects []project.Pr
 	}
 }
 
+func (cli *Adapter) ShowBranches(ctx context.Context, branches []branch.Branch) {
+	log := logger.FromContext(ctx)
+	const format = "%-36s\t%s"
+
+	log.StdOutf(format, "ID", "NAME")
+
+	for _, b := range branches {
+		log.StdOutf(format, b.Id, b.Name)
+	}
+}
+
+func (cli *Adapter) ShowBranchesQuite(ctx context.Context, branches []branch.Branch) {
+	log := logger.FromContext(ctx)
+
+	for _, b := range branches {
+		log.StdOut(b.Id.String())
+	}
+}
+
 func (cli *Adapter) ShowText(ctx context.Context, text string) {
 	log := logger.FromContext(ctx)
 
@@ -90,12 +110,25 @@ func (cli *Adapter) ShowReader(r io.Reader) error {
 func (cli *Adapter) ShowScans(ctx context.Context, scans []scan.Scan) {
 	log := logger.FromContext(ctx)
 
-	const format = "%-36s\t%-36s\n"
+	const format = "%-36s\t%-24s\t%s"
 
-	log.StdOutf(format, "ID", "SETTINGS ID")
+	log.StdOutf(format, "ID", "DATE", "LABEL")
 
-	for _, p := range scans {
-		log.StdOutf(format, p.Id, p.SettingsId)
+	for _, s := range scans {
+		date := ""
+		if !s.ScanDate.IsZero() {
+			date = s.ScanDate.Format("2006-01-02 15:04:05")
+		}
+
+		log.StdOutf(format, s.Id, date, s.ScanLabel)
+	}
+}
+
+func (cli *Adapter) ShowScansQuite(ctx context.Context, scans []scan.Scan) {
+	log := logger.FromContext(ctx)
+
+	for _, s := range scans {
+		log.StdOut(s.Id.String())
 	}
 }
 

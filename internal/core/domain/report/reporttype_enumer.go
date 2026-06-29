@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _ReportTypeName = "autocheckcustomgitlabjsonmarkdownnistoud4owaspowaspmpcidssplainreportsanssarifxml"
+const _ReportTypeName = "autocheckcustomgitlabjsonjsonv2markdownnistoud4owaspowaspmpcidssplainreportsanssarifxml"
 
-var _ReportTypeIndex = [...]uint8{0, 9, 15, 21, 25, 33, 37, 41, 46, 52, 58, 69, 73, 78, 81}
+var _ReportTypeIndex = [...]uint8{0, 9, 15, 21, 25, 31, 39, 43, 47, 52, 58, 64, 75, 79, 84, 87}
 
-const _ReportTypeLowerName = "autocheckcustomgitlabjsonmarkdownnistoud4owaspowaspmpcidssplainreportsanssarifxml"
+const _ReportTypeLowerName = "autocheckcustomgitlabjsonjsonv2markdownnistoud4owaspowaspmpcidssplainreportsanssarifxml"
 
 func (i ReportType) String() string {
 	if i >= ReportType(len(_ReportTypeIndex)-1) {
@@ -28,19 +28,20 @@ func _ReportTypeNoOp() {
 	_ = x[Custom-(1)]
 	_ = x[Gitlab-(2)]
 	_ = x[Json-(3)]
-	_ = x[Markdown-(4)]
-	_ = x[Nist-(5)]
-	_ = x[Oud4-(6)]
-	_ = x[Owasp-(7)]
-	_ = x[Owaspm-(8)]
-	_ = x[Pcidss-(9)]
-	_ = x[PlainReport-(10)]
-	_ = x[Sans-(11)]
-	_ = x[Sarif-(12)]
-	_ = x[Xml-(13)]
+	_ = x[JsonV2-(4)]
+	_ = x[Markdown-(5)]
+	_ = x[Nist-(6)]
+	_ = x[Oud4-(7)]
+	_ = x[Owasp-(8)]
+	_ = x[Owaspm-(9)]
+	_ = x[Pcidss-(10)]
+	_ = x[PlainReport-(11)]
+	_ = x[Sans-(12)]
+	_ = x[Sarif-(13)]
+	_ = x[Xml-(14)]
 }
 
-var _ReportTypeValues = []ReportType{AutoCheck, Custom, Gitlab, Json, Markdown, Nist, Oud4, Owasp, Owaspm, Pcidss, PlainReport, Sans, Sarif, Xml}
+var _ReportTypeValues = []ReportType{AutoCheck, Custom, Gitlab, Json, JsonV2, Markdown, Nist, Oud4, Owasp, Owaspm, Pcidss, PlainReport, Sans, Sarif, Xml}
 
 var _ReportTypeNameToValueMap = map[string]ReportType{
 	_ReportTypeName[0:9]:        AutoCheck,
@@ -51,26 +52,28 @@ var _ReportTypeNameToValueMap = map[string]ReportType{
 	_ReportTypeLowerName[15:21]: Gitlab,
 	_ReportTypeName[21:25]:      Json,
 	_ReportTypeLowerName[21:25]: Json,
-	_ReportTypeName[25:33]:      Markdown,
-	_ReportTypeLowerName[25:33]: Markdown,
-	_ReportTypeName[33:37]:      Nist,
-	_ReportTypeLowerName[33:37]: Nist,
-	_ReportTypeName[37:41]:      Oud4,
-	_ReportTypeLowerName[37:41]: Oud4,
-	_ReportTypeName[41:46]:      Owasp,
-	_ReportTypeLowerName[41:46]: Owasp,
-	_ReportTypeName[46:52]:      Owaspm,
-	_ReportTypeLowerName[46:52]: Owaspm,
-	_ReportTypeName[52:58]:      Pcidss,
-	_ReportTypeLowerName[52:58]: Pcidss,
-	_ReportTypeName[58:69]:      PlainReport,
-	_ReportTypeLowerName[58:69]: PlainReport,
-	_ReportTypeName[69:73]:      Sans,
-	_ReportTypeLowerName[69:73]: Sans,
-	_ReportTypeName[73:78]:      Sarif,
-	_ReportTypeLowerName[73:78]: Sarif,
-	_ReportTypeName[78:81]:      Xml,
-	_ReportTypeLowerName[78:81]: Xml,
+	_ReportTypeName[25:31]:      JsonV2,
+	_ReportTypeLowerName[25:31]: JsonV2,
+	_ReportTypeName[31:39]:      Markdown,
+	_ReportTypeLowerName[31:39]: Markdown,
+	_ReportTypeName[39:43]:      Nist,
+	_ReportTypeLowerName[39:43]: Nist,
+	_ReportTypeName[43:47]:      Oud4,
+	_ReportTypeLowerName[43:47]: Oud4,
+	_ReportTypeName[47:52]:      Owasp,
+	_ReportTypeLowerName[47:52]: Owasp,
+	_ReportTypeName[52:58]:      Owaspm,
+	_ReportTypeLowerName[52:58]: Owaspm,
+	_ReportTypeName[58:64]:      Pcidss,
+	_ReportTypeLowerName[58:64]: Pcidss,
+	_ReportTypeName[64:75]:      PlainReport,
+	_ReportTypeLowerName[64:75]: PlainReport,
+	_ReportTypeName[75:79]:      Sans,
+	_ReportTypeLowerName[75:79]: Sans,
+	_ReportTypeName[79:84]:      Sarif,
+	_ReportTypeLowerName[79:84]: Sarif,
+	_ReportTypeName[84:87]:      Xml,
+	_ReportTypeLowerName[84:87]: Xml,
 }
 
 var _ReportTypeNames = []string{
@@ -78,16 +81,17 @@ var _ReportTypeNames = []string{
 	_ReportTypeName[9:15],
 	_ReportTypeName[15:21],
 	_ReportTypeName[21:25],
-	_ReportTypeName[25:33],
-	_ReportTypeName[33:37],
-	_ReportTypeName[37:41],
-	_ReportTypeName[41:46],
-	_ReportTypeName[46:52],
+	_ReportTypeName[25:31],
+	_ReportTypeName[31:39],
+	_ReportTypeName[39:43],
+	_ReportTypeName[43:47],
+	_ReportTypeName[47:52],
 	_ReportTypeName[52:58],
-	_ReportTypeName[58:69],
-	_ReportTypeName[69:73],
-	_ReportTypeName[73:78],
-	_ReportTypeName[78:81],
+	_ReportTypeName[58:64],
+	_ReportTypeName[64:75],
+	_ReportTypeName[75:79],
+	_ReportTypeName[79:84],
+	_ReportTypeName[84:87],
 }
 
 // ReportTypeString retrieves an enum value from the enum constants string name.

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 
@@ -12,7 +13,10 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer stop()
 
-	app := application.NewApplication()
+	app, err := application.NewApplication()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	app.Run(ctx)
 }

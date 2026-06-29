@@ -7,8 +7,6 @@ import (
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-
-	"github.com/POSIdev-community/aictl/internal/core/domain/config"
 )
 
 type Logger struct {
@@ -20,6 +18,7 @@ func NewLogger(consoleVerbose bool, logPath string) (*zap.Logger, error) {
 	cores = append(cores, newInfoCore())
 
 	if consoleVerbose {
+		cores = append(cores, newDebugCore())
 		cores = append(cores, newErrorCore())
 	}
 
@@ -74,6 +73,18 @@ func newErrorCore() zapcore.Core {
 	)
 }
 
+func newDebugCore() zapcore.Core {
+	debugEncoder := zapcore.NewConsoleEncoder(newErrorConfig())
+
+	return zapcore.NewCore(
+		debugEncoder,
+		zapcore.Lock(os.Stderr),
+		zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+			return lvl >= zapcore.DebugLevel && lvl < zapcore.ErrorLevel
+		}),
+	)
+}
+
 func newErrorConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
 		TimeKey:        "ts",
@@ -101,10 +112,10 @@ func ContextWithLogger(ctx context.Context, logger *zap.Logger) context.Context 
 	return context.WithValue(ctx, zap.Logger{}, logger)
 }
 
-func (log *Logger) LogConfig(cfg *config.Config) {
+func (log *Logger) LogConfig(projectID, branchID string) {
 	log.z.Error("config",
-		zap.String("project-id", cfg.ProjectId().String()),
-		zap.String("branch-id", cfg.BranchId().String()))
+		zap.String("project-id", projectID),
+		zap.String("branch-id", branchID))
 }
 
 func (log *Logger) StdOut(msg string) {
@@ -121,4 +132,8 @@ func (log *Logger) StdErr(msg string) {
 
 func (log *Logger) StdErrf(format string, a ...any) {
 	log.z.Sugar().Errorf(format, a...)
+}
+
+func (log *Logger) Debugf(format string, a ...any) {
+	log.z.Sugar().Debugf(format, a...)
 }

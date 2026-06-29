@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
+	"github.com/POSIdev-community/aictl/internal/core/domain/scantype"
 	"github.com/POSIdev-community/aictl/internal/presenter/.utils"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +15,7 @@ type CmdScanStartProject struct {
 }
 
 type UseCaseScanStartProject interface {
-	Execute(ctx context.Context, scanLabel string) error
+	Execute(ctx context.Context, scanLabel string, scanType scantype.Type) error
 }
 
 func NewScanStartProjectCmd(cfg *config.Config, uc UseCaseScanStartProject) CmdScanStartProject {
@@ -38,7 +39,7 @@ func NewScanStartProjectCmd(cfg *config.Config, uc UseCaseScanStartProject) CmdS
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
-			if err := uc.Execute(ctx, scanLabel); err != nil {
+			if err := uc.Execute(ctx, scanLabel, scanTypeFromFlags()); err != nil {
 				cmd.SilenceUsage = true
 
 				return fmt.Errorf("'scan start project' usecase call: %w", err)

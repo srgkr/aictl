@@ -1,0 +1,10 @@
+stands:
+  "5.4":
+    url: https://aie-54.example.com
+    token: "<token>"
+    version_major: "5"
+  "6.0":
+    url: https://aie-60.example.com
+    token: "<token>"
+    version_major: "6"
+tls_skip: true

@@ -11,7 +11,7 @@ template-schema: "{{.Template}}.schema.json"
 filename: "{{.InterfaceName |lower}}.go"
 dir: "{{.InterfaceDir}}/mocks/"
 packages:
-  github.com/POSIdev-community/aictl/internal/core/application/usecase:
+  github.com/POSIdev-community/aictl/internal/core/usecase:
     config:
       all: true
       recursive: true

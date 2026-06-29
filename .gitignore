@@ -3,3 +3,5 @@ build/
 bin
 mocks/
 .ai
+tests/e2e/stands.local.yaml
+tests/e2e/.work/

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/POSIdev-community/aictl/internal/core/domain/scantype"
 	_utils "github.com/POSIdev-community/aictl/internal/presenter/.utils"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +15,18 @@ type CmdScanStart struct {
 	*cobra.Command
 }
 
-var scanLabel string
+var (
+	scanLabel string
+	fullScan  bool
+)
+
+func scanTypeFromFlags() scantype.Type {
+	if fullScan {
+		return scantype.Full
+	}
+
+	return scantype.Incremental
+}
 
 func NewPersistentPreRunEScanStartCmd(prev PersistentPreRunEScanCmd) PersistentPreRunEScanStartCmd {
 	return _utils.ChainRunE(prev, func(cmd *cobra.Command, args []string) error {
@@ -44,6 +56,7 @@ func NewScanStartCmd(persistentPreRunE PersistentPreRunEScanStartCmd, cmdScanSta
 	cmd.AddCommand(cmdScanStartProject.Command)
 
 	cmd.PersistentFlags().StringVar(&scanLabel, "scan-label", "", "scan label for scan")
+	cmd.PersistentFlags().BoolVar(&fullScan, "full-scan", false, "run full scan instead of incremental")
 
 	return CmdScanStart{cmd}
 }

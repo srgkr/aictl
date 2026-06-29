@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/internal/presenter/.utils"
-	"github.com/POSIdev-community/aictl/pkg/errs"
 	"github.com/POSIdev-community/aictl/pkg/fshelper"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
@@ -39,7 +39,7 @@ func NewPersistentPreRunEGetScanReportCmd(prev PersistentPreRunEGetScanCmd) Pers
 
 		if outPath != "" {
 			if fshelper.PathExists(outPath) && !forceRewriteOutPath {
-				return errs.NewValidationError("'output' path exists")
+				return validation.NewError("'output' path exists")
 			}
 		}
 
@@ -53,6 +53,7 @@ func NewGetScanReportCmd(
 	cmdGetScanReportAutocheck CmdGetScanReportAutocheck,
 	cmdGetScanReportGitlab CmdGetScanReportGitlab,
 	cmdGetScanReportJson CmdGetScanReportJson,
+	cmdGetScanReportJsonV2 CmdGetScanReportJsonV2,
 	cmdGetScanReportMarkdown CmdGetScanReportMarkdown,
 	cmdGetScanReportNist CmdGetScanReportNist,
 	cmdGetScanReportOud4 CmdGetScanReportOud4,
@@ -85,6 +86,7 @@ func NewGetScanReportCmd(
 	cmd.AddCommand(cmdGetScanReportAutocheck.Command)
 	cmd.AddCommand(cmdGetScanReportGitlab.Command)
 	cmd.AddCommand(cmdGetScanReportJson.Command)
+	cmd.AddCommand(cmdGetScanReportJsonV2.Command)
 	cmd.AddCommand(cmdGetScanReportMarkdown.Command)
 	cmd.AddCommand(cmdGetScanReportNist.Command)
 	cmd.AddCommand(cmdGetScanReportOud4.Command)

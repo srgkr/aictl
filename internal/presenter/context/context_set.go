@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
-	"github.com/POSIdev-community/aictl/pkg/errs"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/spf13/cobra"
 )
 
@@ -32,11 +32,11 @@ func NewConfigSetCommand(cfg *config.Config, uc UseCaseConfigSet) CmdConfigSet {
 		Short: "Set current aictl configuration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if uriFlag == "" && tokenFlag == "" && !tlsSkipFlag && !noTlsSkipFlag && projectIdFlag == "" && branchIdFlag == "" {
-				return errs.NewValidationError("Any configs not provided")
+				return validation.NewError("Any configs not provided")
 			}
 
 			if tlsSkipFlag && noTlsSkipFlag {
-				return errs.NewValidationError("Not use both 'tls-skip' and 'no-tls-skip' flags at the same time")
+				return validation.NewError("Not use both 'tls-skip' and 'no-tls-skip' flags at the same time")
 			}
 
 			if uriFlag != "" {

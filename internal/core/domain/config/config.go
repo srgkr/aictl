@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/POSIdev-community/aictl/pkg/errs"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/google/uuid"
 )
 
@@ -31,7 +31,7 @@ func (cfg *Config) Token() string {
 
 func (cfg *Config) SetToken(token string) error {
 	if token == "" {
-		return errs.NewValidationRequiredError("token")
+		return validation.NewRequiredError("token")
 	}
 
 	cfg.token = token
@@ -75,12 +75,12 @@ func (cfg *Config) ProjectId() uuid.UUID {
 
 func (cfg *Config) SetProjectId(projectIdFlag string) error {
 	if projectIdFlag == "" {
-		return errs.NewValidationRequiredError("project-id")
+		return validation.NewRequiredError("project-id")
 	}
 
 	projectId, err := uuid.Parse(projectIdFlag)
 	if err != nil {
-		return errs.NewValidationFieldError("project-id", fmt.Sprintf("'%s' invalud uuid", projectIdFlag))
+		return validation.NewFieldError("project-id", fmt.Sprintf("'%s' invalud uuid", projectIdFlag))
 	}
 
 	cfg.projectId = projectId
@@ -111,12 +111,12 @@ func (cfg *Config) BranchId() uuid.UUID {
 
 func (cfg *Config) SetBranchId(branchIdFlag string) error {
 	if branchIdFlag == "" {
-		return errs.NewValidationRequiredError("branch-id")
+		return validation.NewRequiredError("branch-id")
 	}
 
 	branchId, err := uuid.Parse(branchIdFlag)
 	if err != nil {
-		return errs.NewValidationFieldError("branch-id", fmt.Sprintf("'%s' invalud uuid", branchId))
+		return validation.NewFieldError("branch-id", fmt.Sprintf("'%s' invalud uuid", branchId))
 	}
 
 	cfg.branchId = branchId
@@ -143,11 +143,11 @@ func (cfg *Config) UpdateBranchId(branchIdFlag string) error {
 
 func (cfg *Config) Validate() error {
 	if err := cfg.uri.validate(); err != nil {
-		return errs.NewValidationRequiredError("uri")
+		return validation.NewRequiredError("uri")
 	}
 
 	if cfg.token == "" {
-		return errs.NewValidationRequiredError("token")
+		return validation.NewRequiredError("token")
 	}
 
 	return nil
@@ -155,7 +155,7 @@ func (cfg *Config) Validate() error {
 
 func (cfg *Config) ValidateProjectId() error {
 	if cfg.ProjectId() == uuid.Nil {
-		return errs.NewValidationRequiredError("projectId")
+		return validation.NewRequiredError("projectId")
 	}
 
 	return nil
@@ -163,7 +163,7 @@ func (cfg *Config) ValidateProjectId() error {
 
 func (cfg *Config) ValidateBranchId() error {
 	if cfg.BranchId() == uuid.Nil {
-		return errs.NewValidationRequiredError("branchId")
+		return validation.NewRequiredError("branchId")
 	}
 
 	return nil

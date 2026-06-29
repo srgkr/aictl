@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/POSIdev-community/aictl/pkg/errs"
+	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/google/uuid"
 )
 
@@ -14,7 +14,7 @@ func ParseUUIDs(args []string) ([]uuid.UUID, error) {
 	for i, arg := range args {
 		id, err := uuid.Parse(arg)
 		if err != nil {
-			return nil, errs.NewValidationFieldError(arg, "invalid uuid")
+			return nil, validation.NewFieldError(arg, "invalid uuid")
 		}
 
 		uuids[i] = id
