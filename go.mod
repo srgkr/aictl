@@ -1,6 +1,6 @@
 module github.com/POSIdev-community/aictl
 
-go 1.25.6
+go 1.25.8
 
 require (
 	github.com/getkin/kin-openapi v0.140.0
