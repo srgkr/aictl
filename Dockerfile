@@ -15,6 +15,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
 
 FROM alpine:latest
 
+RUN addgroup -S aictl && adduser -S aictl -G aictl
+
 RUN apk --no-cache add ca-certificates bash curl jq
 RUN mkdir -p ~/.config/aictl
 
@@ -23,6 +25,8 @@ WORKDIR /app
 # Copy the built binary from the builder stage
 COPY --from=builder /app/main ./aictl
 ENV PATH="/app:${PATH}"
+
+USER aictl
 
 # Command to run the application
 ENTRYPOINT ["/bin/bash"]
