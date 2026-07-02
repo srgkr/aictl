@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/POSIdev-community/aictl/internal/adapter/ai/client"
+	"github.com/POSIdev-community/aictl/internal/adapter/ai/common"
 	"github.com/POSIdev-community/aictl/internal/core/domain/branch"
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
 	"github.com/POSIdev-community/aictl/internal/core/domain/project"
@@ -20,49 +20,14 @@ import (
 	"github.com/google/uuid"
 )
 
-type ClientAi interface {
-	GetDefaultSettings(ctx context.Context) (settings.ScanSettings, error)
-	SetProjectSettings(ctx context.Context, projectId uuid.UUID, settings *settings.ScanSettings) error
-	CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string) (*uuid.UUID, error)
-	CreateProject(ctx context.Context, projectName string) (*uuid.UUID, error)
-	DeleteProject(ctx context.Context, projectId uuid.UUID) error
-	ExistsProject(ctx context.Context, projectName string) (bool, error)
-	GetProjectId(ctx context.Context, projectName string) (*uuid.UUID, error)
-	GetProjects(ctx context.Context) ([]project.Project, error)
-	GetProject(ctx context.Context, projectId uuid.UUID) (*project.Project, error)
-	GetDefaultTemplateId(ctx context.Context, reportType report.ReportType) (uuid.UUID, error)
-	GetCustomTemplateId(ctx context.Context, reportName string) (uuid.UUID, error)
-	GetReport(ctx context.Context, projectId, scanResultId, templateId uuid.UUID, includeComments, includeDFD, includeGlossary bool, l10n string) (io.ReadCloser, error)
-	GetSbom(ctx context.Context, projectId, scanResultId uuid.UUID) (io.ReadCloser, error)
-	GetScanLogs(ctx context.Context, projectId, scanResultId uuid.UUID) (io.ReadCloser, error)
-	GetBranches(ctx context.Context, projectId uuid.UUID) ([]branch.Branch, error)
-	GetScans(ctx context.Context, branchId uuid.UUID) ([]scan.Scan, error)
-	GetLastScan(ctx context.Context, branchId uuid.UUID) (*scan.Scan, error)
-	GetScan(ctx context.Context, projectId, scanId uuid.UUID) (*scan.Scan, error)
-	GetScanAiproj(ctx context.Context, projectId, scanSettingsId uuid.UUID) (io.ReadCloser, error)
-	GetScanStage(ctx context.Context, projectId, scanId uuid.UUID) (scanstage.ScanStage, error)
-	GetScanItem(ctx context.Context, id uuid.UUID) (queue.Item, error)
-	StartScanBranch(ctx context.Context, branchId uuid.UUID, scanLabel string, scanType scantype.Type) (uuid.UUID, error)
-	StartScanProject(ctx context.Context, projectId uuid.UUID, scanLabel string, scanType scantype.Type) (uuid.UUID, error)
-	StopScan(ctx context.Context, scanResultId uuid.UUID) error
-	UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string) error
-	GetHealthcheck(ctx context.Context) (bool, error)
-	CheckLicense(ctx context.Context) error
-	GetScanStatistic(ctx context.Context, projectId, scanResultId uuid.UUID) (*statistic.Statistic, error)
-}
+type ClientAi = common.ClientAi
 
 type jwtRetrier interface {
 	AddJwtRetry()
 }
 
-var (
-	minSupportedVersion, _ = version.NewVersion("5.0.0")
-	client6xMinVersion, _  = version.NewVersion("6.0.0")
-	maxSupportedVersion, _ = version.NewVersion("7.0.0")
-)
-
 type Adapter struct {
-	baseClient *client.BaseClient
+	baseClient *common.BaseClient
 
 	activeClient  ClientAi
 	cfg           *config.Config
@@ -70,7 +35,7 @@ type Adapter struct {
 }
 
 func NewAdapter(cfg *config.Config) (*Adapter, error) {
-	baseClient := client.NewBaseClient()
+	baseClient := common.NewBaseClient()
 
 	return &Adapter{baseClient: baseClient, cfg: cfg}, nil
 }
@@ -157,6 +122,10 @@ func (a *Adapter) GetLastScan(ctx context.Context, branchId uuid.UUID) (*scan.Sc
 
 func (a *Adapter) GetScan(ctx context.Context, projectId, scanId uuid.UUID) (*scan.Scan, error) {
 	return a.activeClient.GetScan(ctx, projectId, scanId)
+}
+
+func (a *Adapter) GetProjectAiproj(ctx context.Context, projectId uuid.UUID) (io.ReadCloser, error) {
+	return a.activeClient.GetProjectAiproj(ctx, projectId)
 }
 
 func (a *Adapter) GetScanAiproj(ctx context.Context, projectId, scanSettingsId uuid.UUID) (io.ReadCloser, error) {
