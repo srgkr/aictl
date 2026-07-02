@@ -18,6 +18,7 @@ Get resources
 * [aictl](aictl.md)	 - Application Inspector ConTroL tool
 * [aictl get branches](aictl_get_branches.md)	 - Get AI branches
 * [aictl get healthcheck](aictl_get_healthcheck.md)	 - Get aie healthcheck
+* [aictl get project](aictl_get_project.md)	 - Get project
 * [aictl get projects](aictl_get_projects.md)	 - Get AI projects
 * [aictl get scan](aictl_get_scan.md)	 - Get scan
 * [aictl get scans](aictl_get_scans.md)	 - Get AI scans
