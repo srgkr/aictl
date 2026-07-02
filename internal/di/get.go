@@ -3,9 +3,10 @@ package di
 import (
 	getBranches "github.com/POSIdev-community/aictl/internal/core/usecase/get/branches"
 	getHealthchech "github.com/POSIdev-community/aictl/internal/core/usecase/get/healthcheck"
+	projectAiproj "github.com/POSIdev-community/aictl/internal/core/usecase/get/project/aiproj"
 	getProjects "github.com/POSIdev-community/aictl/internal/core/usecase/get/projects"
 	"github.com/POSIdev-community/aictl/internal/core/usecase/get/scan"
-	"github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/aiproj"
+	scanAiproj "github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/aiproj"
 	"github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/logs"
 	"github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/report"
 	defaultreport "github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/report/defaultreport"
@@ -29,6 +30,11 @@ func buildGetCmd(a *adapters) (*get.CmdGet, error) {
 		return nil, err
 	}
 	cmdProjects := get.NewGetProjectsCmd(projectsUC)
+
+	cmdProject, err := buildGetProjectCmd(a)
+	if err != nil {
+		return nil, err
+	}
 
 	branchesUC, err := getBranches.NewUseCase(a.ai, a.cli, a.cfg)
 	if err != nil {
@@ -55,7 +61,20 @@ func buildGetCmd(a *adapters) (*get.CmdGet, error) {
 
 	persistentPreRunEGetCmd := get.NewPersistentPreRunEGetCmd(a.cfg)
 
-	return get.NewGetCmd(persistentPreRunEGetCmd, cmdHealthcheck, cmdProjects, cmdBranches, cmdScans, cmdScan, cmdVersion), nil
+	return get.NewGetCmd(persistentPreRunEGetCmd, cmdHealthcheck, cmdProjects, cmdProject, cmdBranches, cmdScans, cmdScan, cmdVersion), nil
+}
+
+func buildGetProjectCmd(a *adapters) (get.CmdGetProject, error) {
+	projectAiprojUC, err := projectAiproj.NewUseCase(a.ai, a.cli, a.cfg)
+	if err != nil {
+		return get.CmdGetProject{}, err
+	}
+	cmdAiproj := get.NewGetProjectAiprojCmd(projectAiprojUC)
+
+	persistentPreRunEGetCmd := get.NewPersistentPreRunEGetCmd(a.cfg)
+	persistentPreRunEGetProjectCmd := get.NewPersistentPreRunEGetProjectCmd(a.cfg, persistentPreRunEGetCmd)
+
+	return get.NewGetProjectCmd(persistentPreRunEGetProjectCmd, cmdAiproj), nil
 }
 
 func buildGetScanCmd(a *adapters) (get.CmdGetScan, error) {
@@ -64,7 +83,7 @@ func buildGetScanCmd(a *adapters) (get.CmdGetScan, error) {
 		return get.CmdGetScan{}, err
 	}
 
-	aiprojUC, err := aiproj.NewUseCase(a.ai, a.cli, a.cfg)
+	aiprojUC, err := scanAiproj.NewUseCase(a.ai, a.cli, a.cfg)
 	if err != nil {
 		return get.CmdGetScan{}, err
 	}
