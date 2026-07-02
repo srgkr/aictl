@@ -18,7 +18,7 @@ func NewPersistentPreRunEGetProjectCmd(cfg *config.Config, prev PersistentPreRun
 	})
 }
 
-func NewGetProjectCmd(persistentPreRunE PersistentPreRunEGetProjectCmd, cmdGetProjectAiproj CmdGetProjectAiproj) CmdGetProject {
+func NewGetProjectCmd(persistentPreRunE PersistentPreRunEGetProjectCmd, cmdGetProjectAiproj CmdGetProjectAiproj, cmdGetProjectSettings CmdGetProjectSettings) CmdGetProject {
 	cmd := &cobra.Command{
 		Use:               "project",
 		Short:             "Get project",
@@ -26,6 +26,7 @@ func NewGetProjectCmd(persistentPreRunE PersistentPreRunEGetProjectCmd, cmdGetPr
 	}
 
 	cmd.AddCommand(cmdGetProjectAiproj.Command)
+	cmd.AddCommand(cmdGetProjectSettings.Command)
 
 	cmd.PersistentFlags().StringVarP(&projectIdFlag, "project-id", "p", "", "project id")
 

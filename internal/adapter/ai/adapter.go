@@ -12,6 +12,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/queue"
 	"github.com/POSIdev-community/aictl/internal/core/domain/report"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scan"
+	"github.com/POSIdev-community/aictl/internal/core/domain/scanagent"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scanstage"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scantype"
 	"github.com/POSIdev-community/aictl/internal/core/domain/settings"
@@ -56,8 +57,16 @@ func (a *Adapter) GetDefaultSettings(ctx context.Context) (settings.ScanSettings
 	return a.activeClient.GetDefaultSettings(ctx)
 }
 
+func (a *Adapter) GetProjectSettings(ctx context.Context, projectId uuid.UUID) (settings.ScanSettings, error) {
+	return a.activeClient.GetProjectSettings(ctx, projectId)
+}
+
 func (a *Adapter) SetProjectSettings(ctx context.Context, projectId uuid.UUID, settings *settings.ScanSettings) error {
 	return a.activeClient.SetProjectSettings(ctx, projectId, settings)
+}
+
+func (a *Adapter) GetScanAgents(ctx context.Context) ([]scanagent.ScanAgent, error) {
+	return a.activeClient.GetScanAgents(ctx)
 }
 
 func (a *Adapter) CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string) (*uuid.UUID, error) {

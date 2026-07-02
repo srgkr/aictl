@@ -9,6 +9,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/queue"
 	"github.com/POSIdev-community/aictl/internal/core/domain/report"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scan"
+	"github.com/POSIdev-community/aictl/internal/core/domain/scanagent"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scanstage"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scantype"
 	"github.com/POSIdev-community/aictl/internal/core/domain/settings"
@@ -18,7 +19,9 @@ import (
 
 type ClientAi interface {
 	GetDefaultSettings(ctx context.Context) (settings.ScanSettings, error)
+	GetProjectSettings(ctx context.Context, projectId uuid.UUID) (settings.ScanSettings, error)
 	SetProjectSettings(ctx context.Context, projectId uuid.UUID, settings *settings.ScanSettings) error
+	GetScanAgents(ctx context.Context) ([]scanagent.ScanAgent, error)
 	CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string) (*uuid.UUID, error)
 	CreateProject(ctx context.Context, projectName string) (*uuid.UUID, error)
 	DeleteProject(ctx context.Context, projectId uuid.UUID) error

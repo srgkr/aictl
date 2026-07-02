@@ -13,6 +13,8 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/branch"
 	"github.com/POSIdev-community/aictl/internal/core/domain/project"
 	"github.com/POSIdev-community/aictl/internal/core/domain/scan"
+	"github.com/POSIdev-community/aictl/internal/core/domain/scanagent"
+	"github.com/POSIdev-community/aictl/internal/core/domain/settings"
 )
 
 type Adapter struct {
@@ -140,4 +142,41 @@ func (cli *Adapter) ShowScanStatistic(ctx context.Context, statistic *statistic.
 	log.StdOutf("Medium: %d", statistic.Medium)
 	log.StdOutf("Low: %d", statistic.Low)
 	log.StdOutf("Potential: %d", statistic.Potential)
+}
+
+func (cli *Adapter) ShowScanAgents(ctx context.Context, agents []scanagent.ScanAgent) {
+	log := logger.FromContext(ctx)
+	const format = "%-36s\t%-24s\t%-12s\t%-12s\t%s"
+
+	log.StdOutf(format, "ID", "NAME", "STATUS", "VERSION", "OS")
+
+	for _, a := range agents {
+		log.StdOutf(format, a.Id, a.Name, a.Status, a.Version, a.OperatingSystem)
+	}
+}
+
+func (cli *Adapter) ShowScanAgentsQuite(ctx context.Context, agents []scanagent.ScanAgent) {
+	log := logger.FromContext(ctx)
+
+	for _, a := range agents {
+		log.StdOut(a.Id.String())
+	}
+}
+
+func (cli *Adapter) ShowProjectSettings(ctx context.Context, view settings.ProjectSettingsView) {
+	log := logger.FromContext(ctx)
+
+	log.StdOutf("Priority: %s", view.Priority)
+	log.StdOutf("Preferred agents only: %t", view.PreferredAgentsOnly)
+
+	if len(view.PreferredAgents) == 0 {
+		log.StdOut("Preferred agents: none")
+
+		return
+	}
+
+	log.StdOut("Preferred agents:")
+	for _, id := range view.PreferredAgents {
+		log.StdOutf("  %s", id)
+	}
 }

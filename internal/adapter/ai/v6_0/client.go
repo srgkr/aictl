@@ -231,7 +231,7 @@ func (a *ClientAI60) SetProjectSettings(ctx context.Context, projectId uuid.UUID
 		return nil
 	}
 
-	priority := v6_0.PriorityLow
+	priority := priorityFromSettings(settings)
 	projectSettings := v6_0.PutApiProjectsProjectIdSettingsJSONRequestBody{
 		ProjectName: &settings.ProjectName,
 		Priority:    &priority,
@@ -317,6 +317,10 @@ func (a *ClientAI60) SetProjectSettings(ctx context.Context, projectId uuid.UUID
 	errorModel := res.JSON400
 	if err = CheckResponseByModel(statusCode, responseBody, errorModel); err != nil {
 		return fmt.Errorf("put project settings: %w", err)
+	}
+
+	if err := a.putPreferredAgentsSettings(ctx, projectId, settings); err != nil {
+		return err
 	}
 
 	if settings.HasBlackBoxSettings() {

@@ -1,12 +1,16 @@
-## aictl get project
+## aictl get scan-agents
 
-Get project
+Get scan agents
+
+```
+aictl get scan-agents [flags]
+```
 
 ### Options
 
 ```
-  -h, --help                help for project
-  -p, --project-id string   project id
+  -h, --help    help for scan-agents
+  -q, --quite   Get only ids
 ```
 
 ### Options inherited from parent commands
@@ -22,6 +26,4 @@ Get project
 ### SEE ALSO
 
 * [aictl get](aictl_get.md)	 - Get resources
-* [aictl get project aiproj](aictl_get_project_aiproj.md)	 - Get project aiproj
-* [aictl get project settings](aictl_get_project_settings.md)	 - Get project settings
 

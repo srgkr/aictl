@@ -24,6 +24,7 @@ func NewGetCmd(
 	cmdGetBranches CmdGetBranches,
 	cmdGetScans CmdGetScans,
 	cmdGetScan CmdGetScan,
+	cmdGetScanAgents CmdGetScanAgents,
 	cmdGetVersion CmdGetVersion) *CmdGet {
 
 	cmd := &cobra.Command{
@@ -38,6 +39,7 @@ func NewGetCmd(
 	cmd.AddCommand(cmdGetBranches.Command)
 	cmd.AddCommand(cmdGetScans.Command)
 	cmd.AddCommand(cmdGetScan.Command)
+	cmd.AddCommand(cmdGetScanAgents.Command)
 	cmd.AddCommand(cmdGetVersion.Command)
 
 	_utils.AddConnectionPersistentFlags(cmd)

@@ -13,24 +13,26 @@ func (s *ScanSettings) IsEmpty() bool {
 }
 
 type ScanSettings struct {
-	ProjectName           string                `json:"projectName"`
-	Languages             []string              `json:"languages"`
-	WhiteBoxSettings      WhiteBoxSettings      `json:"whiteBoxSettings"`
-	BlackBoxEnabled       bool                  `json:"blackBoxEnabled"`
-	BlackBoxSettings      BlackBoxSettings      `json:"blackBoxSettings"`
-	DotNetSettings        DotNetSettings        `json:"dotNetSettings"`
-	GoSettings            GoSettings            `json:"goSettings"`
-	JavaScriptSettings    JavaScriptSettings    `json:"javaScriptSettings"`
-	JavaSettings          JavaSettings          `json:"javaSettings"`
-	PhpSettings           PhpSettings           `json:"phpSettings"`
-	PmTaintSettings       PmTaintSettings       `json:"pmTaintSettings"`
-	PythonSettings        PythonSettings        `json:"pythonSettings"`
-	RubySettings          RubySettings          `json:"rubySettings"`
-	PygrepSettings        PygrepSettings        `json:"pygrepSettings"`
-	ScaSettings           ScaSettings           `json:"scaSettings"`
-	ReportAfterScan       ReportAfterScan       `json:"reportAfterScan"`
-	SkipGitIgnoreFiles    bool                  `json:"skipGitIgnoreFiles"`
-	VcsConnectionSettings VcsConnectionSettings `json:"vcsConnectionSettings"`
+	ProjectName             string                  `json:"projectName"`
+	Languages               []string                `json:"languages"`
+	WhiteBoxSettings        WhiteBoxSettings        `json:"whiteBoxSettings"`
+	BlackBoxEnabled         bool                    `json:"blackBoxEnabled"`
+	BlackBoxSettings        BlackBoxSettings        `json:"blackBoxSettings"`
+	DotNetSettings          DotNetSettings          `json:"dotNetSettings"`
+	GoSettings              GoSettings              `json:"goSettings"`
+	JavaScriptSettings      JavaScriptSettings      `json:"javaScriptSettings"`
+	JavaSettings            JavaSettings            `json:"javaSettings"`
+	PhpSettings             PhpSettings             `json:"phpSettings"`
+	PmTaintSettings         PmTaintSettings         `json:"pmTaintSettings"`
+	PythonSettings          PythonSettings          `json:"pythonSettings"`
+	RubySettings            RubySettings            `json:"rubySettings"`
+	PygrepSettings          PygrepSettings          `json:"pygrepSettings"`
+	ScaSettings             ScaSettings             `json:"scaSettings"`
+	ReportAfterScan         ReportAfterScan         `json:"reportAfterScan"`
+	SkipGitIgnoreFiles      bool                    `json:"skipGitIgnoreFiles"`
+	VcsConnectionSettings   VcsConnectionSettings   `json:"vcsConnectionSettings"`
+	Priority                Priority                `json:"priority"`
+	PreferredAgentsSettings PreferredAgentsSettings `json:"preferredAgentsSettings"`
 }
 
 type WhiteBoxSettings struct {
