@@ -10,12 +10,18 @@ type CmdUpdate struct {
 	*cobra.Command
 }
 
+type PersistentPreRunEUpdateCmd _utils.RunE
+
+func NewPersistentPreRunEUpdateCmd(cfg *config.Config) PersistentPreRunEUpdateCmd {
+	return _utils.ChainRunE(_utils.InitializeLogger, _utils.UpdateConfig(cfg))
+}
+
 var (
 	projectIdFlag string
 	branchIdFlag  string
 )
 
-func NewUpdateCmd(cfg *config.Config, cmdUpdateSources CmdUpdateSources) *CmdUpdate {
+func NewUpdateCmd(cfg *config.Config, cmdUpdateSources CmdUpdateSources, cmdUpdateProject CmdUpdateProject) *CmdUpdate {
 	cmd := &cobra.Command{
 		Use:               "update",
 		Short:             "Update resources",
@@ -23,6 +29,7 @@ func NewUpdateCmd(cfg *config.Config, cmdUpdateSources CmdUpdateSources) *CmdUpd
 	}
 
 	cmd.AddCommand(cmdUpdateSources.Command)
+	cmd.AddCommand(cmdUpdateProject.Command)
 
 	_utils.AddConnectionPersistentFlags(cmd)
 

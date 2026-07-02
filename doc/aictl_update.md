@@ -16,5 +16,6 @@ Update resources
 ### SEE ALSO
 
 * [aictl](aictl.md)	 - Application Inspector ConTroL tool
+* [aictl update project](aictl_update_project.md)	 - Update project
 * [aictl update sources](aictl_update_sources.md)	 - Update sources
 

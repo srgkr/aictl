@@ -40,13 +40,21 @@ func TestUseCase_Execute(t *testing.T) {
 				LaunchParameters: "-v",
 			},
 		}, nil).Once()
+		aiAdapter.On("GetProjectSettings", ctx, projectID).Return(domainsettings.ScanSettings{
+			Priority: domainsettings.PriorityHigh,
+			PreferredAgentsSettings: domainsettings.PreferredAgentsSettings{
+				PreferredAgentsOnly: true,
+			},
+		}, nil).Once()
 		aiAdapter.On("SetProjectSettings", ctx, projectID, mock.MatchedBy(func(settings *domainsettings.ScanSettings) bool {
 			return settings != nil &&
 				settings.ProjectName == "demo" &&
 				len(settings.Languages) == 1 &&
 				settings.Languages[0] == "Go" &&
 				settings.WhiteBoxSettings.StaticCodeAnalysisEnabled &&
-				settings.GoSettings.LaunchParameters == "+z"
+				settings.GoSettings.LaunchParameters == "+z" &&
+				settings.Priority == domainsettings.PriorityHigh &&
+				settings.PreferredAgentsSettings.PreferredAgentsOnly
 		})).Return(nil).Once()
 
 		cliAdapter := NewMockCLI(t)
@@ -71,6 +79,7 @@ func TestUseCase_Execute(t *testing.T) {
 		aiAdapter.On("InitializeWithRetry", ctx).Return(nil).Once()
 		aiAdapter.On("GetVersion", ctx).Return(serverVersion, nil).Once()
 		aiAdapter.On("GetDefaultSettings", ctx).Return(domainsettings.ScanSettings{}, nil).Once()
+		aiAdapter.On("GetProjectSettings", ctx, projectID).Return(domainsettings.ScanSettings{}, nil).Once()
 		aiAdapter.On("SetProjectSettings", ctx, projectID, mock.MatchedBy(func(settings *domainsettings.ScanSettings) bool {
 			return settings != nil && settings.GoSettings.LaunchParameters == "+z"
 		})).Return(nil).Once()
