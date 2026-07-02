@@ -18,3 +18,35 @@ func TestLoadStandsExample(t *testing.T) {
 	require.Error(t, err, "example config must use placeholder tokens")
 	require.Nil(t, stands)
 }
+
+func TestStandVersion(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		stand   string
+		want    string
+		wantErr bool
+	}{
+		{name: "54", stand: "5.4", want: "5.4"},
+		{name: "60", stand: "6.0", want: "6.0"},
+		{name: "61", stand: "6.1", want: "6.1"},
+		{name: "invalid", stand: "prod", wantErr: true},
+		{name: "major only", stand: "6", wantErr: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := StandVersion(tt.stand)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}

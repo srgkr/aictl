@@ -15,14 +15,15 @@ const (
 	defaultConfigRelPath = "tests/e2e/stands.local.yaml"
 	standOrder54         = "5.4"
 	standOrder60         = "6.0"
+	standOrder61         = "6.1"
 )
 
-var standOrder = []string{standOrder54, standOrder60}
+var standOrder = []string{standOrder54, standOrder60, standOrder61}
 
 type Stand struct {
-	URL          string `yaml:"url"`
-	Token        string `yaml:"token"`
-	VersionMajor string `yaml:"version_major"`
+	URL           string `yaml:"url"`
+	Token         string `yaml:"token"`
+	AiprojVersion string `yaml:"aiproj_version"`
 }
 
 type standsFile struct {
@@ -84,12 +85,42 @@ func LoadStands(path string) (map[string]Stand, error) {
 		if strings.TrimSpace(stand.Token) == "" || stand.Token == "<token>" {
 			return nil, fmt.Errorf("stand %q: token is not configured", name)
 		}
-		if strings.TrimSpace(stand.VersionMajor) == "" {
-			return nil, fmt.Errorf("stand %q: version_major is required", name)
+		if _, err := StandVersion(name); err != nil {
+			return nil, err
 		}
 	}
 
 	return cfg.Stands, nil
+}
+
+func StandVersion(standName string) (string, error) {
+	parts := strings.Split(strings.TrimSpace(standName), ".")
+	if len(parts) < 2 || parts[0] == "" || parts[1] == "" {
+		return "", fmt.Errorf("stand %q: name must be major.minor (e.g. 6.0)", standName)
+	}
+
+	return parts[0] + "." + parts[1], nil
+}
+
+func (s Stand) ResolveAiprojVersion(standName string) (string, error) {
+	if v := strings.TrimSpace(s.AiprojVersion); v != "" {
+		return v, nil
+	}
+
+	switch standName {
+	case standOrder54:
+		return "1.9", nil
+	case standOrder60:
+		return "1.10", nil
+	case standOrder61:
+		return "1.11", nil
+	default:
+		return "", fmt.Errorf("stand %q: aiproj_version is required", standName)
+	}
+}
+
+func AiprojFixturePath(fixturesDir, aiprojVersion string) string {
+	return filepath.Join(fixturesDir, fmt.Sprintf("aiproj-%s.json", aiprojVersion))
 }
 
 func OrderedStandNames(stands map[string]Stand) []string {

@@ -39,15 +39,19 @@ func assertUUID(t *testing.T, value string) {
 	require.NoError(t, err, "expected UUID, got %q", value)
 }
 
-func assertVersionMajor(t *testing.T, version, expectedMajor string) {
+func assertVersionMajorMinor(t *testing.T, version, expectedMajorMinor string) {
 	t.Helper()
 
 	version = strings.TrimSpace(version)
 	require.NotEmpty(t, version, "aie version is empty")
 
-	parts := strings.SplitN(version, ".", 2)
+	parts := strings.Split(version, ".")
+	require.GreaterOrEqual(t, len(parts), 2, "aie version %q must contain major.minor", version)
 	require.NotEmpty(t, parts[0], "aie version major in %q", version)
-	require.Equal(t, expectedMajor, parts[0], "aie version major")
+	require.NotEmpty(t, parts[1], "aie version minor in %q", version)
+
+	actual := parts[0] + "." + parts[1]
+	require.Equal(t, expectedMajorMinor, actual, "aie version major.minor")
 }
 
 func assertSARIF(t *testing.T, path string) {
@@ -68,13 +72,16 @@ func assertSARIF(t *testing.T, path string) {
 	require.NotEmpty(t, doc.Runs, "sarif.runs")
 }
 
-func AssertPipelineArtifacts(t *testing.T, workDir, expectedMajor string) {
+func AssertPipelineArtifacts(t *testing.T, workDir, standName string) {
 	t.Helper()
+
+	expectedVersion, err := StandVersion(standName)
+	require.NoError(t, err)
 
 	meta := loadMeta(t, filepath.Join(workDir, "meta.json"))
 	assertUUID(t, meta.ProjectID)
 	assertUUID(t, meta.BranchID)
 	assertUUID(t, meta.ScanID)
-	assertVersionMajor(t, meta.AIEVersion, expectedMajor)
+	assertVersionMajorMinor(t, meta.AIEVersion, expectedVersion)
 	assertSARIF(t, filepath.Join(workDir, "sarif.json"))
 }

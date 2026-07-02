@@ -8,6 +8,7 @@ PROJECT_NAME="${3:?PROJECT_NAME required}"
 AICTL="${AICTL:-aictl}"
 FIXTURES_DIR="${FIXTURES_DIR:?FIXTURES_DIR required}"
 WORK_DIR="${WORK_DIR:?WORK_DIR required}"
+AIPROJ_FIXTURE="${AIPROJ_FIXTURE:?AIPROJ_FIXTURE required}"
 
 project_id=""
 branch_id=""
@@ -31,7 +32,7 @@ project_id=$("${AICTL}" create "${CONN[@]}" project "${PROJECT_NAME}" --safe -v)
 aiproj_path="${WORK_DIR}/aiproj.json"
 python3 -c "
 import json
-with open('${FIXTURES_DIR}/aiproj.json') as f:
+with open('${AIPROJ_FIXTURE}') as f:
     data = json.load(f)
 data['ProjectName'] = '${PROJECT_NAME}'
 with open('${aiproj_path}', 'w') as f:

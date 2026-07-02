@@ -49,6 +49,9 @@ func TestBasePipeline(t *testing.T) {
 		t.Run("AIE_"+standName, func(t *testing.T) {
 			t.Parallel()
 
+			aiprojVersion, err := stand.ResolveAiprojVersion(standName)
+			require.NoError(t, err)
+
 			workDir := t.TempDir()
 			projectName := fmt.Sprintf("aictl-e2e-%s-%s", standName, uuid.NewString())
 
@@ -58,12 +61,13 @@ func TestBasePipeline(t *testing.T) {
 				"AICTL="+aictlBin,
 				"FIXTURES_DIR="+fixturesDir,
 				"WORK_DIR="+workDir,
+				"AIPROJ_FIXTURE="+AiprojFixturePath(fixturesDir, aiprojVersion),
 			)
 
 			out, runErr := cmd.CombinedOutput()
 			require.NoError(t, runErr, "pipeline failed:\n%s", out)
 
-			AssertPipelineArtifacts(t, workDir, stand.VersionMajor)
+			AssertPipelineArtifacts(t, workDir, standName)
 		})
 	}
 }
