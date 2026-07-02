@@ -2,16 +2,17 @@ all: false
 force-file-write: true
 formatter: goimports
 log-level: info
-structname: "{{.InterfaceName}}"
-pkgname: "mocks"
-recursive: true
+structname: "Mock{{.InterfaceName}}"
+pkgname: "{{.SrcPackageName}}"
 require-template-schema-exists: true
 template: testify
 template-schema: "{{.Template}}.schema.json"
-filename: "{{.InterfaceName |lower}}.go"
-dir: "{{.InterfaceDir}}/mocks/"
+filename: '{{.InterfaceFile | base | trimSuffix ".go"}}_mock.go'
+dir: "{{.InterfaceDir}}"
 packages:
-  github.com/POSIdev-community/aictl/internal/core/usecase:
+  github.com/POSIdev-community/aictl/internal/core/usecase/set/project/settings:
     config:
       all: true
-      recursive: true
+  github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/report/defaultreport:
+    config:
+      all: true

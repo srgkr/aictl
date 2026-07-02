@@ -9,7 +9,6 @@ import (
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/report"
 	defaultreport "github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/report/defaultreport"
-	"github.com/POSIdev-community/aictl/internal/core/usecase/get/scan/report/defaultreport/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
@@ -55,12 +54,12 @@ func TestUseCase_Execute(t *testing.T) {
 				l10n := "en"
 				reportType := rt
 
-				aiAdapter := mocks.NewAI(t)
+				aiAdapter := defaultreport.NewMockAI(t)
 				aiAdapter.On("InitializeWithRetry", t.Context()).Return(nil).Once()
 				aiAdapter.On("GetDefaultTemplateId", t.Context(), reportType).Return(templateID, nil).Once()
 				aiAdapter.On("GetReport", t.Context(), projectID, scanID, templateID, includeComments, includeDfd, includeGlossary, l10n).Return(reportReader, nil).Once()
 
-				cliAdapter := mocks.NewCLI(t)
+				cliAdapter := defaultreport.NewMockCLI(t)
 				cliAdapter.On("ShowReader", reportReader).Return(nil).Once()
 				cliAdapter.On("ShowTextf", t.Context(), "getting '%s' scan report, scan-id '%v'", []interface{}{reportType.String(), scanID.String()}).Return().Once()
 				cliAdapter.On("ShowTextf", t.Context(), "'%s' scan report got", []interface{}{reportType.String()}).Return().Once()
@@ -94,12 +93,12 @@ func TestUseCase_Execute(t *testing.T) {
 				l10n := "en"
 				reportType := rt
 
-				aiAdapter := mocks.NewAI(t)
+				aiAdapter := defaultreport.NewMockAI(t)
 				aiAdapter.On("InitializeWithRetry", t.Context()).Return(nil).Once()
 				aiAdapter.On("GetDefaultTemplateId", t.Context(), reportType).Return(templateID, nil).Once()
 				aiAdapter.On("GetReport", t.Context(), projectID, scanID, templateID, includeComments, includeDfd, includeGlossary, l10n).Return(reportReader, nil).Once()
 
-				cliAdapter := mocks.NewCLI(t)
+				cliAdapter := defaultreport.NewMockCLI(t)
 				cliAdapter.On("ShowTextf", t.Context(), "getting '%s' scan report, scan-id '%v'", []interface{}{reportType.String(), scanID.String()}).Return().Once()
 				cliAdapter.On("ShowTextf", t.Context(), "'%s' scan report got", []interface{}{reportType.String()}).Return().Once()
 

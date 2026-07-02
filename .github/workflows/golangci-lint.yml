@@ -26,9 +26,6 @@ jobs:
           go mod verify
           go mod download
 
-      - name: Generate mocks
-        run: make generate-mocks
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:

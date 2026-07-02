@@ -9,8 +9,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-
-	"github.com/POSIdev-community/aictl/internal/core/usecase/set/project/settings/mocks"
 )
 
 var okAIProj = []byte(`{
@@ -32,7 +30,7 @@ func TestUseCase_Execute(t *testing.T) {
 		serverVersion, err := version.NewVersion("6.1.0")
 		require.NoError(t, err)
 
-		aiAdapter := mocks.NewAI(t)
+		aiAdapter := NewMockAI(t)
 		aiAdapter.On("InitializeWithRetry", ctx).Return(nil).Once()
 		aiAdapter.On("GetVersion", ctx).Return(serverVersion, nil).Once()
 		aiAdapter.On("GetDefaultSettings", ctx).Return(domainsettings.ScanSettings{
@@ -51,7 +49,7 @@ func TestUseCase_Execute(t *testing.T) {
 				settings.GoSettings.LaunchParameters == "+z"
 		})).Return(nil).Once()
 
-		cliAdapter := mocks.NewCLI(t)
+		cliAdapter := NewMockCLI(t)
 
 		cfg := config.NewConfig(config.Uri{}, "", true, projectID, uuid.New())
 
@@ -69,7 +67,7 @@ func TestUseCase_Execute(t *testing.T) {
 		serverVersion, err := version.NewVersion("6.1.0")
 		require.NoError(t, err)
 
-		aiAdapter := mocks.NewAI(t)
+		aiAdapter := NewMockAI(t)
 		aiAdapter.On("InitializeWithRetry", ctx).Return(nil).Once()
 		aiAdapter.On("GetVersion", ctx).Return(serverVersion, nil).Once()
 		aiAdapter.On("GetDefaultSettings", ctx).Return(domainsettings.ScanSettings{}, nil).Once()
@@ -77,7 +75,7 @@ func TestUseCase_Execute(t *testing.T) {
 			return settings != nil && settings.GoSettings.LaunchParameters == "+z"
 		})).Return(nil).Once()
 
-		cliAdapter := mocks.NewCLI(t)
+		cliAdapter := NewMockCLI(t)
 
 		cfg := config.NewConfig(config.Uri{}, "", true, projectID, uuid.New())
 
