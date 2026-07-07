@@ -1170,6 +1170,28 @@ func (a *ClientAI60) CheckLicense(ctx context.Context) error {
 	return nil
 }
 
+// Вспомогательные функции для безопасного извлечения значений
+func int32Ptr(p *int32) int32 {
+	if p == nil {
+		return 0
+	}
+	return *p
+}
+
+func strPtr(p *string) string {
+	if p == nil {
+		return ""
+	}
+	return *p
+}
+
+func policyStatePtr(p *v6_0.PolicyState) string {
+	if p == nil {
+		return ""
+	}
+	return string(*p)
+}
+
 func (a *ClientAI60) GetScanStatistic(ctx context.Context, projectId, scanResultId uuid.UUID) (*statistic.Statistic, error) {
 	response, err := a.GetApiProjectsProjectIdScanResultsScanResultIdStatisticWithResponse(ctx, projectId, scanResultId, a.AddJWTToHeader)
 	if err != nil {
@@ -1185,10 +1207,16 @@ func (a *ClientAI60) GetScanStatistic(ctx context.Context, projectId, scanResult
 	model := response.JSON200
 
 	return &statistic.Statistic{
-		Total:     *model.Total,
-		High:      *model.High,
-		Medium:    *model.Medium,
-		Low:       *model.Low,
-		Potential: *model.Potential,
+		Total:        int32Ptr(model.Total),
+		High:         int32Ptr(model.High),
+		Medium:       int32Ptr(model.Medium),
+		Low:          int32Ptr(model.Low),
+		Potential:    int32Ptr(model.Potential),
+		FilesScanned: int32Ptr(model.FilesScanned),
+		FilesTotal:   int32Ptr(model.FilesTotal),
+		UrlsScanned:  int32Ptr(model.UrlsScanned),
+		UrlsTotal:    int32Ptr(model.UrlsTotal),
+		PolicyState:  policyStatePtr(model.PolicyState),
+		ScanDuration: strPtr(model.ScanDuration),
 	}, nil
 }

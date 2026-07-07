@@ -15,7 +15,7 @@ type CmdGetScanStatistic struct {
 }
 
 type UseCaseGetScanStatistic interface {
-	Execute(ctx context.Context, scanId uuid.UUID, outPath string, json bool) error
+	Execute(ctx context.Context, scanId uuid.UUID, outPath string, json bool, fullScanStatistic bool) error
 }
 
 func NewGetScanStatisticCmd(uc UseCaseGetScanStatistic) CmdGetScanStatistic {
@@ -23,6 +23,7 @@ func NewGetScanStatisticCmd(uc UseCaseGetScanStatistic) CmdGetScanStatistic {
 		outPath             string
 		forceRewriteOutPath bool
 		json                bool
+		fullScanStatistic   bool
 	)
 
 	cmd := &cobra.Command{
@@ -41,7 +42,7 @@ func NewGetScanStatisticCmd(uc UseCaseGetScanStatistic) CmdGetScanStatistic {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
-			if err := uc.Execute(ctx, scanId, outPath, json); err != nil {
+			if err := uc.Execute(ctx, scanId, outPath, json, fullScanStatistic); err != nil {
 				cmd.SilenceUsage = true
 
 				return fmt.Errorf("'get scan statistic' usecase call: %w", err)
@@ -53,6 +54,7 @@ func NewGetScanStatisticCmd(uc UseCaseGetScanStatistic) CmdGetScanStatistic {
 
 	cmd.Flags().StringVarP(&outPath, "output", "o", "", "Destination path for the report file")
 	cmd.Flags().BoolVarP(&forceRewriteOutPath, "force", "f", false, "Force rewrite output file")
+	cmd.Flags().BoolVar(&fullScanStatistic, "full", false, "Show full scan statistic model")
 	cmd.Flags().BoolVar(&json, "json", false, "Json format context")
 
 	return CmdGetScanStatistic{cmd}

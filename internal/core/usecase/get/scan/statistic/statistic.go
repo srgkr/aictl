@@ -22,7 +22,7 @@ type AI interface {
 type CLI interface {
 	ShowReader(io.Reader) error
 	ShowTextf(ctx context.Context, format string, args ...any)
-	ShowScanStatistic(context.Context, *statistic.Statistic)
+	ShowScanStatistic(context.Context, *statistic.Statistic, bool)
 }
 
 type UseCase struct {
@@ -43,7 +43,7 @@ func NewUseCase(aiAdapter AI, cliAdapter CLI, cfg *config.Config) (*UseCase, err
 	return &UseCase{aiAdapter, cliAdapter, cfg}, nil
 }
 
-func (u *UseCase) Execute(ctx context.Context, scanId uuid.UUID, fullDestPath string, jsonOutput bool) error {
+func (u *UseCase) Execute(ctx context.Context, scanId uuid.UUID, fullDestPath string, jsonOutput bool, fullScanStatistic bool) error {
 	err := u.aiAdapter.InitializeWithRetry(ctx)
 	if err != nil {
 		return fmt.Errorf("initialize with retry: %w", err)
@@ -57,7 +57,7 @@ func (u *UseCase) Execute(ctx context.Context, scanId uuid.UUID, fullDestPath st
 	}
 
 	if fullDestPath == "" && !jsonOutput {
-		u.cliAdapter.ShowScanStatistic(ctx, stat)
+		u.cliAdapter.ShowScanStatistic(ctx, stat, fullScanStatistic)
 
 		return nil
 	}
