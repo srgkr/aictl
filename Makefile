@@ -16,7 +16,7 @@ pre-commit: generate test doc
 
 .install_mockery:
 	@echo -n "⇒ Installing mockery... "
-	@go install github.com/vektra/mockery/v3@v3.5.1 >/dev/null 2>&1
+	@go install github.com/vektra/mockery/v3@latest >/dev/null 2>&1
 	@echo "$$(mockery version) ✅"
 
 .install_enumer:
