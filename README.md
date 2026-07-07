@@ -1,3 +1,13 @@
+Репозиторий являетя форком [PT Application Inspector CLI control](https://github.com/POSIdev-community/aictl/).
+
+## Изменения:
+* ~~Добавлена поддержка формата aiproj версии 1.9 для PTAI_VERSION 5.4.0.60000 и выше~~ (неактуально)
+* Добавлен показ полной статистики сканирования в соответствии с ScanStatisticModel в API (необходим для проверки более точного состояния после сканирования в версии 5.4.0.60000 в CI/CD для корректировки состояния когда при успешном "Done" возвращается счетчики FilesScanned = 0, FilesTotal > 0)
+* Исправлена ошибка для запроса отчета в XML формате
+* Исправлен недочёт в выводе scan await
+
+---
+
 ## aictl
 PT Application Inspector CLI control
 ___
