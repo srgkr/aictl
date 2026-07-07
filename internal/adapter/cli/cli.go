@@ -134,7 +134,7 @@ func (cli *Adapter) ShowScansQuite(ctx context.Context, scans []scan.Scan) {
 	}
 }
 
-func (cli *Adapter) ShowScanStatistic(ctx context.Context, statistic *statistic.Statistic) {
+func (cli *Adapter) ShowScanStatistic(ctx context.Context, statistic *statistic.Statistic, fullScanStatistic bool) {
 	log := logger.FromContext(ctx)
 
 	log.StdOutf("Total: %d", statistic.Total)
@@ -142,6 +142,14 @@ func (cli *Adapter) ShowScanStatistic(ctx context.Context, statistic *statistic.
 	log.StdOutf("Medium: %d", statistic.Medium)
 	log.StdOutf("Low: %d", statistic.Low)
 	log.StdOutf("Potential: %d", statistic.Potential)
+	if fullScanStatistic {
+		log.StdOutf("FilesScanned: %d", statistic.FilesScanned)
+		log.StdOutf("FilesTotal: %d", statistic.FilesTotal)
+		log.StdOutf("UrlsScanned: %d", statistic.UrlsScanned)
+		log.StdOutf("UrlsTotal: %d", statistic.UrlsTotal)
+		log.StdOutf("PolicyState: %s", statistic.PolicyState)
+		log.StdOutf("ScanDuration: %s", statistic.ScanDuration)
+	}
 }
 
 func (cli *Adapter) ShowScanAgents(ctx context.Context, agents []scanagent.ScanAgent) {
