@@ -4,6 +4,7 @@ go 1.25.8
 
 require (
 	github.com/POSIdev-community/aiproj v0.1.0
+	github.com/denormal/go-gitignore v0.0.0-20180930084346-ae8ad1d07817
 	github.com/getkin/kin-openapi v0.140.0
 	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.15.4
@@ -17,6 +18,7 @@ require (
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.6 // indirect
+	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-openapi/jsonpointer v0.22.5 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect

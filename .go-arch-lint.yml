@@ -11,6 +11,7 @@ components:
     in:
       - pkg/logger/**
       - pkg/fshelper/**
+      - pkg/gitignore/**
       - pkg/metric/**
       - pkg/version/**
   adapter:

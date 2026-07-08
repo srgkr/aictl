@@ -9,9 +9,11 @@ aictl update sources [flags]
 ### Options
 
 ```
-  -b, --branch-id string    branch id
-  -h, --help                help for sources
-  -p, --project-id string   project id
+  -b, --branch-id string           branch id
+  -e, --exclude stringArray        exclude file or directory (gitignore pattern)
+      --exclude-from stringArray   path to file with exclude patterns in gitignore format
+  -h, --help                       help for sources
+  -p, --project-id string          project id
 ```
 
 ### Options inherited from parent commands

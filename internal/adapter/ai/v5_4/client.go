@@ -27,6 +27,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/statistic"
 	"github.com/POSIdev-community/aictl/internal/core/domain/version"
 	"github.com/POSIdev-community/aictl/pkg/clientai/v5_4"
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/POSIdev-community/aictl/pkg/logger"
 	"github.com/google/uuid"
 )
@@ -333,7 +334,7 @@ func (a *ClientAI5x) SetProjectSettings(ctx context.Context, projectId uuid.UUID
 	return nil
 }
 
-func (a *ClientAI5x) CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string) (*uuid.UUID, error) {
+func (a *ClientAI5x) CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string, exclusions gitignore.Exclusions) (*uuid.UUID, error) {
 	useStubSources := scanTargetPath == ""
 	if useStubSources {
 		var err error
@@ -343,7 +344,7 @@ func (a *ClientAI5x) CreateBranch(ctx context.Context, projectId uuid.UUID, bran
 		}
 	}
 
-	archivePath, err := common.PrepareArchive(scanTargetPath)
+	archivePath, err := common.PrepareArchive(ctx, scanTargetPath, exclusions)
 	if archivePath != scanTargetPath {
 		defer func() {
 			_ = os.Remove(archivePath)
@@ -977,10 +978,10 @@ func (a *ClientAI5x) StopScan(ctx context.Context, scanResultId uuid.UUID) error
 	return nil
 }
 
-func (a *ClientAI5x) UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string) error {
+func (a *ClientAI5x) UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string, exclusions gitignore.Exclusions) error {
 	log := logger.FromContext(ctx)
 
-	archivePath, err := common.PrepareArchive(scanTargetPath)
+	archivePath, err := common.PrepareArchive(ctx, scanTargetPath, exclusions)
 	if archivePath != scanTargetPath {
 		defer func() {
 			_ = os.Remove(archivePath)

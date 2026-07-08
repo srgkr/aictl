@@ -14,6 +14,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/scantype"
 	"github.com/POSIdev-community/aictl/internal/core/domain/settings"
 	"github.com/POSIdev-community/aictl/internal/core/domain/statistic"
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/google/uuid"
 )
 
@@ -22,7 +23,7 @@ type ClientAi interface {
 	GetProjectSettings(ctx context.Context, projectId uuid.UUID) (settings.ScanSettings, error)
 	SetProjectSettings(ctx context.Context, projectId uuid.UUID, settings *settings.ScanSettings) error
 	GetScanAgents(ctx context.Context) ([]scanagent.ScanAgent, error)
-	CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string) (*uuid.UUID, error)
+	CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string, exclusions gitignore.Exclusions) (*uuid.UUID, error)
 	CreateProject(ctx context.Context, projectName string) (*uuid.UUID, error)
 	DeleteProject(ctx context.Context, projectId uuid.UUID) error
 	ExistsProject(ctx context.Context, projectName string) (bool, error)
@@ -45,7 +46,7 @@ type ClientAi interface {
 	StartScanBranch(ctx context.Context, branchId uuid.UUID, scanLabel string, scanType scantype.Type) (uuid.UUID, error)
 	StartScanProject(ctx context.Context, projectId uuid.UUID, scanLabel string, scanType scantype.Type) (uuid.UUID, error)
 	StopScan(ctx context.Context, scanResultId uuid.UUID) error
-	UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string) error
+	UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string, exclusions gitignore.Exclusions) error
 	GetHealthcheck(ctx context.Context) (bool, error)
 	CheckLicense(ctx context.Context) error
 	GetScanStatistic(ctx context.Context, projectId, scanResultId uuid.UUID) (*statistic.Statistic, error)

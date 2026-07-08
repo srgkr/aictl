@@ -8,6 +8,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
 	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	"github.com/POSIdev-community/aictl/pkg/fshelper"
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/spf13/cobra"
 )
 
@@ -16,13 +17,15 @@ type CmdUpdateSources struct {
 }
 
 type UseCaseUpdateSources interface {
-	Execute(ctx context.Context, sourcePath string) error
+	Execute(ctx context.Context, sourcePath string, exclusions gitignore.Exclusions) error
 }
 
 func NewUpdateSourcesCmd(cfg *config.Config, uc UseCaseUpdateSources, cmdUpdateSourcesGit CmdUpdateSourcesGit) CmdUpdateSources {
 
 	var (
-		path string
+		path             string
+		excludeFlags     []string
+		excludeFromFlags []string
 	)
 
 	cmd := &cobra.Command{
@@ -50,12 +53,26 @@ func NewUpdateSourcesCmd(cfg *config.Config, uc UseCaseUpdateSources, cmdUpdateS
 				return validation.NewError("path does not exist")
 			}
 
+			for _, excludeFrom := range excludeFromFlags {
+				if !fshelper.PathExists(excludeFrom) {
+					return validation.NewError(fmt.Sprintf("exclude-from path '%s' does not exist", excludeFrom))
+				}
+				if !fshelper.IsFile(excludeFrom) {
+					return validation.NewError(fmt.Sprintf("exclude-from path '%s' is not a file", excludeFrom))
+				}
+			}
+
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
-			if err := uc.Execute(ctx, path); err != nil {
+			exclusions := gitignore.Exclusions{
+				Patterns:  excludeFlags,
+				FromFiles: excludeFromFlags,
+			}
+
+			if err := uc.Execute(ctx, path, exclusions); err != nil {
 				cmd.SilenceUsage = true
 
 				return fmt.Errorf("'update sources' usecase call: %w", err)
@@ -67,6 +84,8 @@ func NewUpdateSourcesCmd(cfg *config.Config, uc UseCaseUpdateSources, cmdUpdateS
 
 	cmd.Flags().StringVarP(&projectIdFlag, "project-id", "p", "", "project id")
 	cmd.Flags().StringVarP(&branchIdFlag, "branch-id", "b", "", "branch id")
+	cmd.Flags().StringArrayVarP(&excludeFlags, "exclude", "e", nil, "exclude file or directory (gitignore pattern)")
+	cmd.Flags().StringArrayVar(&excludeFromFlags, "exclude-from", nil, "path to file with exclude patterns in gitignore format")
 
 	// cmd.AddCommand(cmdUpdateSourcesGit.Command)
 

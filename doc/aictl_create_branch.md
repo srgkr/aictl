@@ -9,9 +9,11 @@ aictl create branch <branch-name> [flags]
 ### Options
 
 ```
-  -h, --help                 help for branch
-  -p, --project-id string    project id
-  -s, --scan-target string   scan target path
+  -e, --exclude stringArray        exclude file or directory (gitignore pattern)
+      --exclude-from stringArray   path to file with exclude patterns in gitignore format
+  -h, --help                       help for branch
+  -p, --project-id string          project id
+  -s, --scan-target string         scan target path
 ```
 
 ### Options inherited from parent commands

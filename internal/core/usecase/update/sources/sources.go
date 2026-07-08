@@ -6,12 +6,13 @@ import (
 
 	"github.com/POSIdev-community/aictl/internal/core/domain/config"
 	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/google/uuid"
 )
 
 type AI interface {
 	Initialize(ctx context.Context) error
-	UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, sourcePath string) error
+	UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, sourcePath string, exclusions gitignore.Exclusions) error
 }
 
 type CLI interface {
@@ -36,7 +37,7 @@ func NewUseCase(aiAdapter AI, cliAdapter CLI, cfg *config.Config) (*UseCase, err
 	return &UseCase{aiAdapter, cliAdapter, cfg}, nil
 }
 
-func (u *UseCase) Execute(ctx context.Context, sourcePath string) error {
+func (u *UseCase) Execute(ctx context.Context, sourcePath string, exclusions gitignore.Exclusions) error {
 	err := u.aiAdapter.Initialize(ctx)
 	if err != nil {
 		return fmt.Errorf("initialize: %w", err)
@@ -44,7 +45,7 @@ func (u *UseCase) Execute(ctx context.Context, sourcePath string) error {
 
 	u.cliAdapter.ShowText(ctx, "start updating sources")
 
-	err = u.aiAdapter.UpdateSources(ctx, u.cfg.ProjectId(), u.cfg.BranchId(), sourcePath)
+	err = u.aiAdapter.UpdateSources(ctx, u.cfg.ProjectId(), u.cfg.BranchId(), sourcePath, exclusions)
 	if err != nil {
 		return err
 	}

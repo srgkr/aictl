@@ -8,6 +8,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/validation"
 	_utils "github.com/POSIdev-community/aictl/internal/presenter/.utils"
 	"github.com/POSIdev-community/aictl/pkg/fshelper"
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/spf13/cobra"
 )
 
@@ -16,14 +17,16 @@ type CmdCreateBranch struct {
 }
 
 type UseCaseCreateBranch interface {
-	Execute(ctx context.Context, cfg *config.Config, branchName, scanTarget string, safe bool) error
+	Execute(ctx context.Context, cfg *config.Config, branchName, scanTarget string, safe bool, exclusions gitignore.Exclusions) error
 }
 
 func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBranch {
 	var (
-		projectIdFlag string
-		branchName    string
-		scanTarget    string
+		projectIdFlag    string
+		branchName       string
+		scanTarget       string
+		excludeFlags     []string
+		excludeFromFlags []string
 	)
 
 	cmd := &cobra.Command{
@@ -41,6 +44,15 @@ func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBra
 				}
 			}
 
+			for _, excludeFrom := range excludeFromFlags {
+				if !fshelper.PathExists(excludeFrom) {
+					return validation.NewError(fmt.Sprintf("exclude-from path '%s' does not exist", excludeFrom))
+				}
+				if !fshelper.IsFile(excludeFrom) {
+					return validation.NewError(fmt.Sprintf("exclude-from path '%s' is not a file", excludeFrom))
+				}
+			}
+
 			args = _utils.ReadArgsFromStdin(args)
 			branchName = args[0]
 
@@ -49,7 +61,12 @@ func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBra
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 
-			if err := uc.Execute(ctx, cfg, branchName, scanTarget, safeFlag); err != nil {
+			exclusions := gitignore.Exclusions{
+				Patterns:  excludeFlags,
+				FromFiles: excludeFromFlags,
+			}
+
+			if err := uc.Execute(ctx, cfg, branchName, scanTarget, safeFlag, exclusions); err != nil {
 				cmd.SilenceUsage = true
 
 				return fmt.Errorf("'create branch' usecase call: %w", err)
@@ -61,6 +78,8 @@ func NewCreateBranchCmd(cfg *config.Config, uc UseCaseCreateBranch) CmdCreateBra
 
 	cmd.Flags().StringVarP(&projectIdFlag, "project-id", "p", "", "project id")
 	cmd.Flags().StringVarP(&scanTarget, "scan-target", "s", "", "scan target path")
+	cmd.Flags().StringArrayVarP(&excludeFlags, "exclude", "e", nil, "exclude file or directory (gitignore pattern)")
+	cmd.Flags().StringArrayVar(&excludeFromFlags, "exclude-from", nil, "path to file with exclude patterns in gitignore format")
 
 	return CmdCreateBranch{cmd}
 }

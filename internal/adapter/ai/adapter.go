@@ -18,6 +18,7 @@ import (
 	"github.com/POSIdev-community/aictl/internal/core/domain/settings"
 	"github.com/POSIdev-community/aictl/internal/core/domain/statistic"
 	"github.com/POSIdev-community/aictl/internal/core/domain/version"
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/google/uuid"
 )
 
@@ -69,8 +70,8 @@ func (a *Adapter) GetScanAgents(ctx context.Context) ([]scanagent.ScanAgent, err
 	return a.activeClient.GetScanAgents(ctx)
 }
 
-func (a *Adapter) CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string) (*uuid.UUID, error) {
-	return a.activeClient.CreateBranch(ctx, projectId, branchName, scanTargetPath)
+func (a *Adapter) CreateBranch(ctx context.Context, projectId uuid.UUID, branchName, scanTargetPath string, exclusions gitignore.Exclusions) (*uuid.UUID, error) {
+	return a.activeClient.CreateBranch(ctx, projectId, branchName, scanTargetPath, exclusions)
 }
 
 func (a *Adapter) CreateProject(ctx context.Context, projectName string) (*uuid.UUID, error) {
@@ -161,8 +162,8 @@ func (a *Adapter) StopScan(ctx context.Context, scanResultId uuid.UUID) error {
 	return a.activeClient.StopScan(ctx, scanResultId)
 }
 
-func (a *Adapter) UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string) error {
-	return a.activeClient.UpdateSources(ctx, projectId, branchId, scanTargetPath)
+func (a *Adapter) UpdateSources(ctx context.Context, projectId, branchId uuid.UUID, scanTargetPath string, exclusions gitignore.Exclusions) error {
+	return a.activeClient.UpdateSources(ctx, projectId, branchId, scanTargetPath, exclusions)
 }
 
 func (a *Adapter) GetVersion(ctx context.Context) (version.Version, error) {

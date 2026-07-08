@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/POSIdev-community/aictl/pkg/gitignore"
 	"github.com/POSIdev-community/aictl/pkg/logger"
 )
 
@@ -136,17 +137,24 @@ func (mrc *multipartReadCloser) Close() error {
 	return mrc.file.Close()
 }
 
-func PrepareArchive(sourcePath string) (archivePath string, err error) {
+func PrepareArchive(ctx context.Context, sourcePath string, exclusions gitignore.Exclusions) (archivePath string, err error) {
 	// Проверяем существование пути
 	info, err := os.Stat(sourcePath)
 	if err != nil {
 		return "", fmt.Errorf("get file info: %w", err)
 	}
 
+	matcher, err := gitignore.NewMatcher(exclusions)
+	if err != nil {
+		return "", fmt.Errorf("compile exclude patterns: %w", err)
+	}
+
 	// Если это ZIP архив - возвращаем путь как есть
 	if !info.IsDir() && strings.HasSuffix(strings.ToLower(sourcePath), ".zip") {
 		return sourcePath, nil
 	}
+
+	logger.FromContext(ctx).StdErrf("preparing sources")
 
 	// Создаем временный файл для архива
 	tmpFile, err := os.CreateTemp("", "archive_*.zip")
@@ -234,6 +242,19 @@ func PrepareArchive(sourcePath string) (archivePath string, err error) {
 
 			// Пропускаем корневую директорию
 			if path == sourcePath {
+				return nil
+			}
+
+			relPath, err := filepath.Rel(sourcePath, path)
+			if err != nil {
+				relPath = path
+			}
+
+			if matcher.Match(relPath, d.IsDir()) {
+				if d.IsDir() {
+					return filepath.SkipDir
+				}
+
 				return nil
 			}
 
