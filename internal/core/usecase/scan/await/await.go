@@ -30,6 +30,7 @@ type AI interface {
 type CLI interface {
 	ShowText(ctx context.Context, text string)
 	ShowTextf(ctx context.Context, format string, a ...any)
+	ReturnText(ctx context.Context, text string)
 }
 
 type UseCase struct {
@@ -106,6 +107,7 @@ func (u *UseCase) Execute(ctx context.Context, scanId uuid.UUID) error {
 	}
 
 	u.cliAdapter.ShowTextf(ctx, "Scan '%s'", stage.Stage)
+	u.cliAdapter.ReturnText(ctx, stage.Stage)
 
 	return nil
 }
